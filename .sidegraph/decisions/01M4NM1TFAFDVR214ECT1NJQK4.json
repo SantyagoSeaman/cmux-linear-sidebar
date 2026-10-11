@@ -1,0 +1,25 @@
+{
+  "choice": "Create and close Dock tabs instead of moving them; name the server tab with an OSC title from the helper; stop the server before closing its terminal; quote the program path in `new-surface --command`, which is typed into a shell.",
+  "consequences": null,
+  "context": "Moving the running server terminal into the page's Dock pane failed, and so did renaming and closing its tab.",
+  "id": "01M4NM1TFAFDVR214ECT1NJQK4",
+  "kind": "gotcha",
+  "layer": "technical",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "`move-surface`, `rename-tab` and `surface open --pane`: they look up surfaces in the caller's workspace and do not find Dock tabs. `close-surface` on a terminal with a running program: fails with internal_error until the program exits.",
+  "scope": "repo",
+  "status": "accepted",
+  "supersedes": null,
+  "title": "Most cmux surface commands cannot address Dock tabs",
+  "valid_from": "2026-10-11T13:57:16.889563Z",
+  "valid_to": null
+}

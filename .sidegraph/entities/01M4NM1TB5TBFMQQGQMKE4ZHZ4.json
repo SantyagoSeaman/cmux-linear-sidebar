@@ -1,0 +1,9 @@
+{
+  "canonical_name": "_current_issue",
+  "descriptor": {
+    "file_path": "linear_sidebar/service.py",
+    "name": "_current_issue"
+  },
+  "entity_id": "01M4NM1TB5TBFMQQGQMKE4ZHZ4",
+  "kind": "concrete"
+}

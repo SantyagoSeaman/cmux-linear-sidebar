@@ -1,0 +1,9 @@
+{
+  "canonical_name": "_show_problem",
+  "descriptor": {
+    "file_path": "linear_sidebar/service.py",
+    "name": "_show_problem"
+  },
+  "entity_id": "01M4NPF0TWHVJT7SKTNDBN8SP5",
+  "kind": "concrete"
+}

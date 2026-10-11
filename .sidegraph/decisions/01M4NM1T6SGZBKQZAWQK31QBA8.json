@@ -1,0 +1,25 @@
+{
+  "choice": "A Python helper serves a page on 127.0.0.1:47801; a browser tab in the global Dock (one per window, kept across workspace switches) shows it, and the helper runs in a background terminal tab of the same Dock pane.",
+  "consequences": "Needs a long-running helper inside cmux. The page shows cmux's browser toolbar unless the tab is seeded from dock.json with chrome:false.",
+  "context": "The panel must list Linear issues for the selected cmux workspace without displacing cmux's native workspace list in the left sidebar.",
+  "id": "01M4NM1T6SGZBKQZAWQK31QBA8",
+  "kind": "adr",
+  "layer": "technical",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "1) CmuxExtensionKit sidebar extension: a working signed probe was built and abandoned (see the record on ExtensionKit). 2) Interpreted custom sidebar (~/.config/cmux/sidebars/*.js|.swift, can sit in the right panel): no network, files or timers; outside data arrives only through workspace fields (progress, description, color, title) that the native list shows too, and `cmux set-status` never reaches it; carrier workspaces in the cmux-sentinel style would clutter the list. 3) Terminal UI in a Dock terminal: simplest, but text-only. 4) One status pill or progress bar per workspace in the native list via set-status/set-progress: too little room for an issue list.",
+  "scope": "repo",
+  "status": "accepted",
+  "supersedes": null,
+  "title": "Show the Linear panel as a local web page in the cmux right-sidebar Dock",
+  "valid_from": "2026-10-11T13:57:16.619246Z",
+  "valid_to": null
+}

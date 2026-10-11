@@ -1,0 +1,22 @@
+{
+  "id": "01M4NM1VQKK0PXRXGH3DTJ1D00",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "source": "Measured from the Dock helper, 2026-10-11",
+  "statement": "`cmux workspace list --json` takes about 40-50 ms when called from a cmux Dock terminal (cmux 0.65.0).",
+  "status": "accepted",
+  "supersedes": null,
+  "supports": [
+    "01M4NM1TDBDE4RFDHYC0NHWQZ4"
+  ],
+  "valid_from": "2026-10-11T13:57:18.182055Z",
+  "valid_to": null
+}

@@ -1,0 +1,9 @@
+{
+  "canonical_name": "app.js",
+  "descriptor": {
+    "file_path": "web/app.js",
+    "name": "app.js"
+  },
+  "entity_id": "01M4NM1TACD75DN5EMGSH7BQD8",
+  "kind": "concrete"
+}

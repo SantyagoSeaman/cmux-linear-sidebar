@@ -1,0 +1,9 @@
+{
+  "canonical_name": "server_answers",
+  "descriptor": {
+    "file_path": "scripts/common.sh",
+    "name": "server_answers"
+  },
+  "entity_id": "01M4NPFSHEA5XDFWHRFF6NG8ZD",
+  "kind": "concrete"
+}

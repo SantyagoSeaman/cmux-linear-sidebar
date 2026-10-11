@@ -1,0 +1,25 @@
+{
+  "choice": "SidebarService.tick wraps every poll and prints the traceback in the server tab. An unexpected exception inside a Linear load is handled like a LinearError (last view with a banner, remembered, retried after 15 s). cmux, git and other poll failures keep the view on screen with a banner, and the next good poll puts the context's view back. LinearClient.query turns unreadable answers and GraphQL errors of any shape into LinearError, and 'Entity not found' becomes LinearNotFound, so an issue lookup no longer hides network errors.",
+  "consequences": null,
+  "context": "A code review found that the poller caught only CmuxError and LinearError: an unexpected Linear answer (a non-JSON body, IncompleteRead, null data) killed the thread and froze the page on stale data while the HTTP server kept serving it. Later reviews found that the 'Unexpected error' banner stayed after recovery, that odd answers were retried every tick without the 15 s delay, and that a one-tick cmux failure erased the board.",
+  "id": "01M4NPDGCR0BF6KK20DA0RAF71",
+  "kind": "lesson",
+  "layer": null,
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:c60fc539aa7d",
+    "ref": null,
+    "session_id": null,
+    "source": "agent"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "Catching only the two expected error types in the tick; replacing the board with a 'Can't reach cmux' page on a single cmux failure; indexing errors[0]['message'] without checking its shape.",
+  "scope": "repo",
+  "status": "accepted",
+  "supersedes": "01M4NM1TN7ZJQXC7G8D5XYJV5Z",
+  "title": "The poller thread must survive any exception",
+  "valid_from": "2026-10-11T14:38:36.937821Z",
+  "valid_to": null
+}

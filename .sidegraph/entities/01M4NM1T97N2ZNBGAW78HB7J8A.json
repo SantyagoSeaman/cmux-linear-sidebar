@@ -1,0 +1,9 @@
+{
+  "canonical_name": "dock-setup.sh",
+  "descriptor": {
+    "file_path": "scripts/dock-setup.sh",
+    "name": "dock-setup.sh"
+  },
+  "entity_id": "01M4NM1T97N2ZNBGAW78HB7J8A",
+  "kind": "concrete"
+}

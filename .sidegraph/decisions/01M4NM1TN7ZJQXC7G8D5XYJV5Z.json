@@ -1,0 +1,25 @@
+{
+  "choice": "SidebarService.tick wraps every poll, prints the traceback in the server tab and shows a banner. LinearClient.query turns unreadable answers into LinearError, and 'Entity not found' becomes LinearNotFound, so an issue lookup no longer hides network errors.",
+  "consequences": null,
+  "context": "A code review found that the poller caught only CmuxError and LinearError: an unexpected Linear answer (a non-JSON body, IncompleteRead, null data) killed the thread and froze the page on stale data while the HTTP server kept serving it.",
+  "id": "01M4NM1TN7ZJQXC7G8D5XYJV5Z",
+  "kind": "lesson",
+  "layer": "technical",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "Catching only the two expected error types in the tick.",
+  "scope": "repo",
+  "status": "superseded",
+  "supersedes": null,
+  "title": "The poller thread must survive any exception",
+  "valid_from": "2026-10-11T13:57:17.082126Z",
+  "valid_to": "2026-10-11T14:38:36.937821Z"
+}

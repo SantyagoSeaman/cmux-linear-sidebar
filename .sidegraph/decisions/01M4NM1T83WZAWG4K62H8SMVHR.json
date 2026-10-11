@@ -1,0 +1,25 @@
+{
+  "choice": "Do not ship an ExtensionKit extension; the panel is a Dock web page. The probe's Xcode project was deleted and the extension unregistered.",
+  "consequences": "Revisit if cmux lets ExtensionKit extensions live in the right sidebar.",
+  "context": "cmux 0.65 ships CmuxExtensionKit, a public SDK for compiled sidebar extensions: a macOS ExtensionKit appex with a SwiftUI view, a typed workspace snapshot and workspace/surface/openURL actions. A probe was built, signed with an Apple Development team, registered with pluginkit and enabled in cmux; it received the selected workspace's branch, project path and pull request URLs and reached the Linear API.",
+  "id": "01M4NM1T83WZAWG4K62H8SMVHR",
+  "kind": "adr",
+  "layer": "technical",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "The ExtensionKit route: (a) cmux hosts extensions only as a left-sidebar provider that replaces the workspace list; no right-sidebar mode exists for them (checked cmux v0.65.0 and main). (b) The extension process lives only while its view is mounted, so nothing runs in the background. (c) App Sandbox: no access to the repository's git remote or files without user-granted bookmarks, so the repo could only be guessed from the folder name. (d) Needs Xcode, an Apple Development certificate, and the GPL-3.0 SDK checked out from the cmux monorepo (not a SwiftPM package); the API key could only be baked into the bundle's Info.plist from a build-time .env.",
+  "scope": "repo",
+  "status": "accepted",
+  "supersedes": null,
+  "title": "Rejected: building the sidebar as a CmuxExtensionKit (ExtensionKit) app extension",
+  "valid_from": "2026-10-11T13:57:16.661740Z",
+  "valid_to": null
+}

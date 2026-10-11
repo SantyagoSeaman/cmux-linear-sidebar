@@ -1,0 +1,9 @@
+{
+  "canonical_name": "run_forever",
+  "descriptor": {
+    "file_path": "linear_sidebar/service.py",
+    "name": "run_forever"
+  },
+  "entity_id": "01M4NM1TDF92836HN3WHP82MPV",
+  "kind": "concrete"
+}

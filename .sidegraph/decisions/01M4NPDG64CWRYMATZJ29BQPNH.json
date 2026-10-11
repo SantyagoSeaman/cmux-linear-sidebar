@@ -1,0 +1,25 @@
+{
+  "choice": "Two commands: git clone and install.sh, which checks macOS, a cmux terminal, the command line tools, Python 3.9+ and the cmux CLI, asks for the key, and sets up the Dock; after saving a key it runs dock-setup.sh --restart. uninstall.sh stops the helper first (only after ps and /api/state show it is the sidebar's server), closes its tabs and deletes the key; each step runs even if an earlier one failed. Updating is git pull plus scripts/dock-setup.sh --restart. The scripts share scripts/common.sh and fail with cmux's own message when a cmux command or the Dock parser fails.",
+  "consequences": null,
+  "context": "The README must work for anyone without special knowledge.",
+  "id": "01M4NPDG64CWRYMATZJ29BQPNH",
+  "kind": "adr",
+  "layer": null,
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:c60fc539aa7d",
+    "ref": null,
+    "session_id": null,
+    "source": "agent"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "Distributing a built app (needs a paid Developer ID and notarization); updating by Ctrl-C in the server tab and then dock-setup.sh (an extra manual step, and --new-key left the old key running); `eval \"$(parser)\"` (bash 3.2 does not stop on the parser's failure, so an unreadable tree looked like an empty Dock).",
+  "scope": "repo",
+  "status": "accepted",
+  "supersedes": "01M4NM1TQ80DF1WK36ZAW1G4J5",
+  "title": "Install with git clone into ~/.cmux-linear-sidebar and install.sh",
+  "valid_from": "2026-10-11T14:38:36.707663Z",
+  "valid_to": null
+}

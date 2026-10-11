@@ -1,0 +1,25 @@
+{
+  "choice": "Current issue: Linear's issueVcsBranchSearch on the branch, else a workspace titled exactly like an issue ID. Project: the current issue's project, else a project whose resource links point into the folder's GitHub origin repository (an active project wins over a finished one), else the project of an issue that has the branch's pull request attached.",
+  "consequences": null,
+  "context": "A cmux workspace is a folder on a git branch; nothing in Linear points to local folders.",
+  "id": "01M4NM1TB4H7C510CH94E2ME3N",
+  "kind": "adr",
+  "layer": "technical",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "Extracting the issue ID from the branch with a regex and team keys (Linear already matches custom branch names); taking the current issue from the pull request (one PR can be attached to several issues); guessing the repository from the folder name (the helper is not sandboxed and reads `git remote get-url origin`); a new custom attribute in Linear for the repository (project Resources links already exist).",
+  "scope": "repo",
+  "status": "accepted",
+  "supersedes": null,
+  "title": "Resolve the workspace's current issue and project in a fixed order",
+  "valid_from": "2026-10-11T13:57:16.760496Z",
+  "valid_to": null
+}

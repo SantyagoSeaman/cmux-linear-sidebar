@@ -1,0 +1,22 @@
+{
+  "id": "01M4NM1VNYM7EFQ1F00ZHR5S60",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "source": "Live GraphQL call, 2026-10-11",
+  "statement": "One GitHub pull request can be attached to several Linear issues: attachmentsForURL returned four issues for a single PR, so a PR cannot identify the current issue.",
+  "status": "accepted",
+  "supersedes": null,
+  "supports": [
+    "01M4NM1TB4H7C510CH94E2ME3N"
+  ],
+  "valid_from": "2026-10-11T13:57:18.127394Z",
+  "valid_to": null
+}

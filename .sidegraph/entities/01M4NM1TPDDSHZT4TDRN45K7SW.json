@@ -1,0 +1,9 @@
+{
+  "canonical_name": "git_head",
+  "descriptor": {
+    "file_path": "linear_sidebar/workspace.py",
+    "name": "git_head"
+  },
+  "entity_id": "01M4NM1TPDDSHZT4TDRN45K7SW",
+  "kind": "concrete"
+}

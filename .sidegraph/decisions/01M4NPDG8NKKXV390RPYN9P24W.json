@@ -1,0 +1,25 @@
+{
+  "choice": "Answer only Host 127.0.0.1 or localhost on our port (DNS rebinding). POST endpoints need the page's Origin or none, Content-Type application/json, and no Sec-Fetch-Site cross-site (CSRF). /api/open accepts only plain https://linear.app links and answers 502 when /usr/bin/open fails or hangs. The page has a Content Security Policy and renders Linear text with textContent; every response also sends `Content-Security-Policy: frame-ancestors 'none'` and `X-Content-Type-Options: nosniff`. /api/state names the program (\"app\": \"cmux-linear-sidebar\") so the scripts can tell it from another program on the port.",
+  "consequences": null,
+  "context": "Any page open in the user's browser can send requests to 127.0.0.1.",
+  "id": "01M4NPDG8NKKXV390RPYN9P24W",
+  "kind": "adr",
+  "layer": null,
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:c60fc539aa7d",
+    "ref": null,
+    "session_id": null,
+    "source": "agent"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "The Host check alone (an earlier version): a cross-site no-cors POST could open any linear.app URL in the user's browser or exhaust the API key's rate limit through /api/refresh. frame-ancestors in the page's meta CSP (browsers ignore it there).",
+  "scope": "repo",
+  "status": "accepted",
+  "supersedes": "01M4NM1TM5NX9JCQQ5EY9YRN5C",
+  "title": "Harden the localhost server against other websites",
+  "valid_from": "2026-10-11T14:38:36.805203Z",
+  "valid_to": null
+}

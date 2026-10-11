@@ -1,0 +1,9 @@
+{
+  "canonical_name": "api_key",
+  "descriptor": {
+    "file_path": "linear_sidebar/config.py",
+    "name": "api_key"
+  },
+  "entity_id": "01M4NM1TK3753FSS79DT28TPPE",
+  "kind": "concrete"
+}

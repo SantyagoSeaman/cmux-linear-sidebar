@@ -1,0 +1,9 @@
+{
+  "canonical_name": "find_tabs",
+  "descriptor": {
+    "file_path": "scripts/common.sh",
+    "name": "find_tabs"
+  },
+  "entity_id": "01M4NPF0SW2YF3ARHY2C58P15M",
+  "kind": "concrete"
+}

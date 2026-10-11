@@ -1,0 +1,22 @@
+{
+  "id": "01M4NM1VPS6VN889MV8GHBF1PF",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "source": "Linear GraphQL schema (packages/sdk/src/schema.graphql in linear/linear) and a live query, 2026-10-11",
+  "statement": "Linear's date filters (DateTimeOrDuration) accept ISO-8601 durations relative to now, so `completedAt: { gt: \"-P1D\" }` means closed within the last 24 hours.",
+  "status": "accepted",
+  "supersedes": null,
+  "supports": [
+    "01M4NM1TCAF3EPCSZ9CGW24VPA"
+  ],
+  "valid_from": "2026-10-11T13:57:18.155374Z",
+  "valid_to": null
+}

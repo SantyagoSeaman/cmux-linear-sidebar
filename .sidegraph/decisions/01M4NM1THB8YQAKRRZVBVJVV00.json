@@ -1,0 +1,25 @@
+{
+  "choice": "dock-setup.sh sets a resume binding and, while its auto_resume is false, prints the one-time step: right-click in the 'Linear server' tab, Resume Commands, Edit, save, Auto-Restore. Approvals are signed per command prefix, so a later CLI binding of the same command is already trusted.",
+  "consequences": null,
+  "context": "After a cmux relaunch the Dock layout comes back but processes do not, so the helper would stay down.",
+  "id": "01M4NM1THB8YQAKRRZVBVJVV00",
+  "kind": "constraint",
+  "layer": "technical",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "Enabling auto-restore from the CLI: bindings set by CLI or socket are always manual and never prompt. Settings, Terminal, Resume Commands: it only lists approved prefixes.",
+  "scope": "repo",
+  "status": "accepted",
+  "supersedes": null,
+  "title": "cmux reruns a resume command after a relaunch only once the user approves it in the UI",
+  "valid_from": "2026-10-11T13:57:16.959505Z",
+  "valid_to": null
+}

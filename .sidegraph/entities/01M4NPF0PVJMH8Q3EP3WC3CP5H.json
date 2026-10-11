@@ -1,0 +1,9 @@
+{
+  "canonical_name": "_read_key",
+  "descriptor": {
+    "file_path": "linear_sidebar/service.py",
+    "name": "_read_key"
+  },
+  "entity_id": "01M4NPF0PVJMH8Q3EP3WC3CP5H",
+  "kind": "concrete"
+}

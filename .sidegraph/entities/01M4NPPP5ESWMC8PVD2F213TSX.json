@@ -1,0 +1,9 @@
+{
+  "canonical_name": "resume_arguments",
+  "descriptor": {
+    "file_path": "scripts/dock_surfaces.py",
+    "name": "resume_arguments"
+  },
+  "entity_id": "01M4NPPP5ESWMC8PVD2F213TSX",
+  "kind": "concrete"
+}

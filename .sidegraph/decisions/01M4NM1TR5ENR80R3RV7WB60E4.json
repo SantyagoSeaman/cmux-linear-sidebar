@@ -1,0 +1,25 @@
+{
+  "choice": "MIT license. Issues on, forms only (no blank issues), with the interaction limit existing_users, renewed every six months. Discussions, wiki and projects off. Squash merges only, web commit sign-off required, DCO. Rulesets keep main and v* tags from being deleted or rewritten. Secret scanning with push protection and private vulnerability reporting on. Actions: GitHub-owned only, pinned to SHAs, read-only token, approval for external contributors' runs. CI runs the unit tests on Python 3.9 and 3.13.",
+  "consequences": null,
+  "context": "First public release on GitHub; spam control modelled on the maintainer's other public repository.",
+  "id": "01M4NM1TR5ENR80R3RV7WB60E4",
+  "kind": "adr",
+  "layer": "business",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "Issues off with collaborators_only (no channel for user feedback); contributors_only (blocks first-time reporters); GPL-3.0 (needed only while the GPL cmux SDK was linked); pre-commit, a gitleaks history scan and OpenSSF Scorecard (out of proportion for a project this size).",
+  "scope": "repo",
+  "status": "accepted",
+  "supersedes": null,
+  "title": "Public repository: MIT license, issues open to accounts older than a day",
+  "valid_from": "2026-10-11T13:57:17.175379Z",
+  "valid_to": null
+}

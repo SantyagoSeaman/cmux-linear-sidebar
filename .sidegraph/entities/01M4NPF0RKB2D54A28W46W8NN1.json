@@ -1,0 +1,9 @@
+{
+  "canonical_name": "runs_server",
+  "descriptor": {
+    "file_path": "scripts/dock_surfaces.py",
+    "name": "runs_server"
+  },
+  "entity_id": "01M4NPF0RKB2D54A28W46W8NN1",
+  "kind": "concrete"
+}

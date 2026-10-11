@@ -1,0 +1,9 @@
+{
+  "canonical_name": "_linked_project",
+  "descriptor": {
+    "file_path": "linear_sidebar/service.py",
+    "name": "_linked_project"
+  },
+  "entity_id": "01M4NM1TB85QMBYZ246D4YE399",
+  "kind": "concrete"
+}

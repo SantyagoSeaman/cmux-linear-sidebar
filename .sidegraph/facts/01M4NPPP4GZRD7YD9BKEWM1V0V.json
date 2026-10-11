@@ -1,0 +1,22 @@
+{
+  "id": "01M4NPPP4GZRD7YD9BKEWM1V0V",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:c60fc539aa7d",
+    "ref": null,
+    "session_id": null,
+    "source": "agent"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "source": "Run on macOS 25.4 during development, 2026-10-11",
+  "statement": "`/usr/bin/security find-generic-password -s <service> -w` exits 44 when the item does not exist (the low byte of errSecItemNotFound, -25300), printing 'The specified item could not be found in the keychain.' on stderr; other failures exit with other codes.",
+  "status": "proposed",
+  "supersedes": null,
+  "supports": [
+    "01M4NPCQT819E63865M623M32H"
+  ],
+  "valid_from": "2026-10-11T14:43:37.728473Z",
+  "valid_to": null
+}

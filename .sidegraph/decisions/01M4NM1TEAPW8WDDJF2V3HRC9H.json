@@ -1,0 +1,25 @@
+{
+  "choice": "The helper runs /usr/bin/open by absolute path, and the page posts links to /api/open instead of navigating.",
+  "consequences": null,
+  "context": "Clicking an issue first opened Linear in a cmux browser split inside the Dock, next to the panel.",
+  "id": "01M4NM1TEAPW8WDDJF2V3HRC9H",
+  "kind": "gotcha",
+  "layer": "technical",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "Plain `open` from PATH: cmux terminals put Contents/Resources/bin/open first in PATH, a wrapper that sends http(s) URLs to cmux's in-app browser.",
+  "scope": "repo",
+  "status": "accepted",
+  "supersedes": null,
+  "title": "Inside cmux terminals `open URL` opens cmux's own browser, not the system one",
+  "valid_from": "2026-10-11T13:57:16.862722Z",
+  "valid_to": null
+}

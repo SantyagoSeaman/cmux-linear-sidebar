@@ -1,0 +1,9 @@
+{
+  "canonical_name": "project_issues",
+  "descriptor": {
+    "file_path": "linear_sidebar/linear.py",
+    "name": "project_issues"
+  },
+  "entity_id": "01M4NM1VPVNC0BMXWKZJWFSZ05",
+  "kind": "concrete"
+}

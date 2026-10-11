@@ -1,0 +1,9 @@
+{
+  "canonical_name": "issue_for_branch",
+  "descriptor": {
+    "file_path": "linear_sidebar/linear.py",
+    "name": "issue_for_branch"
+  },
+  "entity_id": "01M4NM1VM1QJ0Q1ANHXRSG1W0G",
+  "kind": "concrete"
+}

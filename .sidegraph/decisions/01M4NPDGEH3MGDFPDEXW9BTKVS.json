@@ -1,0 +1,25 @@
+{
+  "choice": "git_head runs `git symbolic-ref --quiet --short HEAD`: exit 0 gives the branch, exit 1 means a detached HEAD, any other exit status means no repository. A timeout or a git that cannot run raises GitError, which the poller shows as a banner over the last view; `remote get-url origin` is treated the same way.",
+  "consequences": null,
+  "context": "The panel called a freshly initialized repository 'not a git repository'. A review then found that a git timeout took the same path.",
+  "id": "01M4NPDGEH3MGDFPDEXW9BTKVS",
+  "kind": "gotcha",
+  "layer": null,
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:c60fc539aa7d",
+    "ref": null,
+    "session_id": null,
+    "source": "agent"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "`git rev-parse --abbrev-ref HEAD`: fails on an unborn branch and cannot tell that case from a missing repository. Returning 'not a repository' on a timeout: a slow repository flipped to the empty state and back.",
+  "scope": "repo",
+  "status": "accepted",
+  "supersedes": "01M4NM1TPB1Z3SQXV3T619VJJY",
+  "title": "`git rev-parse --abbrev-ref HEAD` fails in a repository without commits",
+  "valid_from": "2026-10-11T14:38:36.994832Z",
+  "valid_to": null
+}

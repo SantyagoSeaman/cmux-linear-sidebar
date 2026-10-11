@@ -1,0 +1,42 @@
+# Unit tests on the oldest and a current supported Python, plus a syntax check of the shell
+# scripts. Nothing here talks to cmux or Linear: the tests use fakes.
+#
+# Actions are pinned to commit SHAs (the tag comment records the version): a mutable tag is a
+# supply-chain hole. Dependabot proposes updates to the pins.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.9", "3.13"]
+    steps:
+      # This job never pushes, so the checkout's git credentials should not persist into the
+      # runner's git config.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Unit tests
+        run: python -W error::ResourceWarning -m unittest discover -s tests -t . -v
+
+      - name: Shell scripts parse
+        run: |
+          for script in install.sh uninstall.sh scripts/dock-setup.sh scripts/common.sh; do
+            bash -n "$script"
+          done

@@ -1,0 +1,25 @@
+{
+  "choice": "git_head runs `git symbolic-ref --quiet --short HEAD`: exit 0 gives the branch, exit 1 means a detached HEAD, anything else means no repository.",
+  "consequences": null,
+  "context": "The panel called a freshly initialized repository 'not a git repository'.",
+  "id": "01M4NM1TPB1Z3SQXV3T619VJJY",
+  "kind": "gotcha",
+  "layer": "technical",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "`git rev-parse --abbrev-ref HEAD`: fails on an unborn branch and cannot tell that case from a missing repository.",
+  "scope": "repo",
+  "status": "superseded",
+  "supersedes": null,
+  "title": "`git rev-parse --abbrev-ref HEAD` fails in a repository without commits",
+  "valid_from": "2026-10-11T13:57:17.116693Z",
+  "valid_to": "2026-10-11T14:38:36.994832Z"
+}

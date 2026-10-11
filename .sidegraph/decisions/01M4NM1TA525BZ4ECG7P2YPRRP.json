@@ -1,0 +1,25 @@
+{
+  "choice": "The helper uses only the standard library (http.server, urllib, subprocess), tests use unittest, and the page is plain HTML, CSS and JavaScript with no build step.",
+  "consequences": null,
+  "context": "Anyone should be able to install the sidebar without special knowledge. Apple's command line tools provide git and Python 3.9.6.",
+  "id": "01M4NM1TA525BZ4ECG7P2YPRRP",
+  "kind": "adr",
+  "layer": "technical",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "A Swift helper (no HTTP server in Foundation, needs Xcode to build); TUI or web frameworks from PyPI or Go (third-party dependencies to install); distributing a built .app (needs a paid Developer ID and notarization).",
+  "scope": "repo",
+  "status": "accepted",
+  "supersedes": null,
+  "title": "Python standard library only, Python 3.9 or newer",
+  "valid_from": "2026-10-11T13:57:16.729608Z",
+  "valid_to": null
+}

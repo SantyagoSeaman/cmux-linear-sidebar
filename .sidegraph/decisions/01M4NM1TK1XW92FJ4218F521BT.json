@@ -1,0 +1,25 @@
+{
+  "choice": "install.sh checks the key by piping it to `cmux-linear-sidebar --check-key` and stores it with `security -i` reading commands on stdin, as the generic password 'cmux-linear-sidebar'. The helper reads LINEAR_API_KEY or the Keychain, after it already listens, because the Keychain may wait on an unlock prompt.",
+  "consequences": null,
+  "context": "A public tool: the key must not sit in files, logs or process lists.",
+  "id": "01M4NM1TK1XW92FJ4218F521BT",
+  "kind": "adr",
+  "layer": "technical",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "A .env file in the repository (used during development; plaintext, removed); baking the key into an app bundle's Info.plist (the ExtensionKit probe); `security add-generic-password -w KEY` (the key shows in ps).",
+  "scope": "repo",
+  "status": "superseded",
+  "supersedes": null,
+  "title": "Keep the Linear API key in the login Keychain",
+  "valid_from": "2026-10-11T13:57:17.013429Z",
+  "valid_to": "2026-10-11T14:38:11.738393Z"
+}

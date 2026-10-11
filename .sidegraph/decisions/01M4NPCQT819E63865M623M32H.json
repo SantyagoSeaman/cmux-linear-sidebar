@@ -1,0 +1,25 @@
+{
+  "choice": "install.sh checks the key by piping it to `cmux-linear-sidebar --check-key` and stores it with `security -i` reading commands on stdin, as the generic password 'cmux-linear-sidebar', then runs dock-setup.sh --restart because the server keeps the key it read. The server reads LINEAR_API_KEY or the Keychain on the poller thread (SidebarService key_source), so /api/state answers while the read waits. `security` exit 44 means no item (state no-key, looked for again at every reload); any other failure or the 30 s timeout is KeychainError (state key-error, not retried until the user clicks Try again, so the unlock prompt does not keep coming back). The key goes to Linear as an unredirected header and never into the resume binding or a typed command.",
+  "consequences": null,
+  "context": "A public tool: the key must not sit in files, logs, process lists or command lines. Reviews found that a key read once in server.main before serve_forever left the server keyless for good when the Keychain was locked, and that install.sh --new-key did not reach a running server.",
+  "id": "01M4NPCQT819E63865M623M32H",
+  "kind": "adr",
+  "layer": null,
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:c60fc539aa7d",
+    "ref": null,
+    "session_id": null,
+    "source": "agent"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "A .env file in the repository (used during development; plaintext, removed); baking the key into an app bundle's Info.plist (the ExtensionKit probe); `security add-generic-password -w KEY` (the key shows in ps); reading the key once in server.main before serving (a locked Keychain left the server without a key until restart, and 'no key' looked the same as 'locked'); retrying a Keychain error automatically (each try can raise the unlock prompt again); `-T /usr/bin/security` when storing (security created the item, so it is already trusted); passing LINEAR_API_KEY through the Dock command or resume binding (it would land in the terminal, shell history and cmux's stored binding).",
+  "scope": "repo",
+  "status": "accepted",
+  "supersedes": "01M4NM1TK1XW92FJ4218F521BT",
+  "title": "Keep the Linear API key in the login Keychain; the poller reads it",
+  "valid_from": "2026-10-11T14:38:11.738393Z",
+  "valid_to": null
+}

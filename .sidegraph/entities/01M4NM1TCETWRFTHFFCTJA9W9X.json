@@ -1,0 +1,9 @@
+{
+  "canonical_name": "current_card",
+  "descriptor": {
+    "file_path": "linear_sidebar/view.py",
+    "name": "current_card"
+  },
+  "entity_id": "01M4NM1TCETWRFTHFFCTJA9W9X",
+  "kind": "concrete"
+}

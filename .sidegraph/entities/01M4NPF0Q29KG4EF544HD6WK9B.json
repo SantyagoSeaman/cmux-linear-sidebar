@@ -1,0 +1,9 @@
+{
+  "canonical_name": "KeychainError",
+  "descriptor": {
+    "file_path": "linear_sidebar/config.py",
+    "name": "KeychainError"
+  },
+  "entity_id": "01M4NPF0Q29KG4EF544HD6WK9B",
+  "kind": "concrete"
+}

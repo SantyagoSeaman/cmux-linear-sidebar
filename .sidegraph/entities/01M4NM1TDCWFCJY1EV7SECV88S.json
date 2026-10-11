@@ -1,0 +1,9 @@
+{
+  "canonical_name": "SidebarService",
+  "descriptor": {
+    "file_path": "linear_sidebar/service.py",
+    "name": "SidebarService"
+  },
+  "entity_id": "01M4NM1TDCWFCJY1EV7SECV88S",
+  "kind": "concrete"
+}

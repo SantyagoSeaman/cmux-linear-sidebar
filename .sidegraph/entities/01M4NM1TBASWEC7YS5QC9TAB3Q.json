@@ -1,0 +1,9 @@
+{
+  "canonical_name": "project_for_repo",
+  "descriptor": {
+    "file_path": "linear_sidebar/view.py",
+    "name": "project_for_repo"
+  },
+  "entity_id": "01M4NM1TBASWEC7YS5QC9TAB3Q",
+  "kind": "concrete"
+}

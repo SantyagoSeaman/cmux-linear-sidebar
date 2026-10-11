@@ -1,0 +1,9 @@
+{
+  "canonical_name": "cmux behaviour this relies on",
+  "descriptor": {
+    "file_path": "docs/architecture.md",
+    "name": "cmux behaviour this relies on"
+  },
+  "entity_id": "01M4NM1T85B0FCEWNFPH51D0F3",
+  "kind": "concrete"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "01M4NM1VKYVV58J55SAVY2TFVF",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "source": "Live GraphQL calls during development, 2026-10-11",
+  "statement": "Linear's issueVcsBranchSearch(branchName:) found the issue for a hand-made branch like `abc-304-short-words` although Linear's own suggested branch name was `feature/abc-304-<title words>`; for `main` it returns null.",
+  "status": "accepted",
+  "supersedes": null,
+  "supports": [
+    "01M4NM1TB4H7C510CH94E2ME3N"
+  ],
+  "valid_from": "2026-10-11T13:57:18.060328Z",
+  "valid_to": null
+}

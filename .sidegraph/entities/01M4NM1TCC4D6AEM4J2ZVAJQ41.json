@@ -1,0 +1,9 @@
+{
+  "canonical_name": "board",
+  "descriptor": {
+    "file_path": "linear_sidebar/view.py",
+    "name": "board"
+  },
+  "entity_id": "01M4NM1TCC4D6AEM4J2ZVAJQ41",
+  "kind": "concrete"
+}

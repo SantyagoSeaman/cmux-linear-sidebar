@@ -1,0 +1,9 @@
+{
+  "canonical_name": "tick",
+  "descriptor": {
+    "file_path": "linear_sidebar/service.py",
+    "name": "tick"
+  },
+  "entity_id": "01M4NM1TN9Q7ZF2EJXDFTC5NW5",
+  "kind": "concrete"
+}

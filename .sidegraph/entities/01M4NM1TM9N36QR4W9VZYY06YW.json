@@ -1,0 +1,9 @@
+{
+  "canonical_name": "openable",
+  "descriptor": {
+    "file_path": "linear_sidebar/server.py",
+    "name": "openable"
+  },
+  "entity_id": "01M4NM1TM9N36QR4W9VZYY06YW",
+  "kind": "concrete"
+}

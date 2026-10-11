@@ -1,0 +1,9 @@
+{
+  "canonical_name": "projects_for_url",
+  "descriptor": {
+    "file_path": "linear_sidebar/linear.py",
+    "name": "projects_for_url"
+  },
+  "entity_id": "01M4NM1VP0F058XPDA12932CBC",
+  "kind": "concrete"
+}

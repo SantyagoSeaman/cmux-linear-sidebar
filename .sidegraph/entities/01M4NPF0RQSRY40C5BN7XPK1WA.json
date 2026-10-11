@@ -1,0 +1,9 @@
+{
+  "canonical_name": "server_pid",
+  "descriptor": {
+    "file_path": "scripts/common.sh",
+    "name": "server_pid"
+  },
+  "entity_id": "01M4NPF0RQSRY40C5BN7XPK1WA",
+  "kind": "concrete"
+}

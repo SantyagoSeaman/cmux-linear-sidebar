@@ -1,0 +1,9 @@
+{
+  "canonical_name": "common.sh",
+  "descriptor": {
+    "file_path": "scripts/common.sh",
+    "name": "common.sh"
+  },
+  "entity_id": "01M4NPF0SQN8PQW0K8CX660GKG",
+  "kind": "concrete"
+}

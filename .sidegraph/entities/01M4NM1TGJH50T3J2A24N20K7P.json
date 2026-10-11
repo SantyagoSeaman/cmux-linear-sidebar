@@ -1,0 +1,9 @@
+{
+  "canonical_name": "reload_page_when_server_answers",
+  "descriptor": {
+    "file_path": "scripts/dock-setup.sh",
+    "name": "reload_page_when_server_answers"
+  },
+  "entity_id": "01M4NM1TGJH50T3J2A24N20K7P",
+  "kind": "concrete"
+}

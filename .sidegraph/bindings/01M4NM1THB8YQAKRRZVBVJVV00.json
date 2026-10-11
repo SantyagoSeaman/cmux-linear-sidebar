@@ -1,0 +1,26 @@
+[
+  {
+    "entity_id": "01M4NM1T8EH9GWNES7TRAVBCCZ",
+    "relation": "affects",
+    "tier": 0,
+    "weight": 1.0
+  },
+  {
+    "entity_id": "01M4NM1THMEKNKBCNEF9F28F9J",
+    "relation": "affects",
+    "tier": 0,
+    "weight": 1.0
+  },
+  {
+    "entity_id": "01M4NM1T97N2ZNBGAW78HB7J8A",
+    "relation": "affects",
+    "tier": 2,
+    "weight": 1.0
+  },
+  {
+    "entity_id": "01M4NM1T9B1170TFCRN897GZ0R",
+    "relation": "affects",
+    "tier": 2,
+    "weight": 1.0
+  }
+]

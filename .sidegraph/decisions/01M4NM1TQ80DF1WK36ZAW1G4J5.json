@@ -1,0 +1,25 @@
+{
+  "choice": "Two commands: git clone and install.sh, which checks macOS, a cmux terminal, the command line tools, Python 3.9+ and the cmux CLI, asks for the key, and sets up the Dock. uninstall.sh stops the helper first, closes its tabs and deletes the key. Updating is git pull plus scripts/dock-setup.sh.",
+  "consequences": null,
+  "context": "The README must work for anyone without special knowledge.",
+  "id": "01M4NM1TQ80DF1WK36ZAW1G4J5",
+  "kind": "adr",
+  "layer": "technical",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "Distributing a built app (needs a paid Developer ID and notarization).",
+  "scope": "repo",
+  "status": "superseded",
+  "supersedes": null,
+  "title": "Install with git clone into ~/.cmux-linear-sidebar and install.sh",
+  "valid_from": "2026-10-11T13:57:17.148518Z",
+  "valid_to": "2026-10-11T14:38:36.707663Z"
+}

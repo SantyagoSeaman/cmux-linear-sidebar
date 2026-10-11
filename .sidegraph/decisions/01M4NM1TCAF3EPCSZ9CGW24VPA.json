@@ -1,0 +1,25 @@
+{
+  "choice": "A card with the current issue, its parent, a sub-issue progress bar and its open sub-issues; below it the project's board: started and unstarted states, then a collapsed 'Closed · 24h' group (completedAt or canceledAt within -P1D). Groups follow workflow state type and name, so the same state of several teams is one group. The current issue and its open sub-issues are left off the board.",
+  "consequences": null,
+  "context": "Four mockups were compared: a by-status board, a tree around the current issue, a project found by repository link on main, and the empty state. The user defined current issues as In Progress, In Review and Todo plus issues closed in the last 24 hours.",
+  "id": "01M4NM1TCAF3EPCSZ9CGW24VPA",
+  "kind": "adr",
+  "layer": "business",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "Board only: no sub-issue context. Tree only: loses the familiar board. Filtering by state names (custom per team) instead of state types. A workspace list inside the panel (not needed once the panel moved to the right sidebar).",
+  "scope": "repo",
+  "status": "accepted",
+  "supersedes": null,
+  "title": "Panel layout: current-issue card with sub-issues above the project's status board",
+  "valid_from": "2026-10-11T13:57:16.797780Z",
+  "valid_to": null
+}

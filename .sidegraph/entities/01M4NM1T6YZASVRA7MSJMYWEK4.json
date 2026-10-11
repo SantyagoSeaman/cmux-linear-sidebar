@@ -1,0 +1,9 @@
+{
+  "canonical_name": "main",
+  "descriptor": {
+    "file_path": "linear_sidebar/server.py",
+    "name": "main"
+  },
+  "entity_id": "01M4NM1T6YZASVRA7MSJMYWEK4",
+  "kind": "concrete"
+}

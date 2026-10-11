@@ -1,0 +1,29 @@
+name: Bug report
+description: The sidebar behaves differently than the README says.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please remove issue titles, project names and anything else private from what you paste.
+        Never paste your Linear API key.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what you saw instead.
+    validations:
+      required: true
+  - type: textarea
+    id: server-output
+    attributes:
+      label: Output of the "Linear server" tab or of the script you ran
+      description: The last lines are usually enough.
+      render: text
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: "cmux version (`cmux --version`), macOS version, and `~/.cmux-linear-sidebar/cmux-linear-sidebar --version`"
+    validations:
+      required: true

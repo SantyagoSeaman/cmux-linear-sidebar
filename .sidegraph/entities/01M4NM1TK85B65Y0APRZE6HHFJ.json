@@ -1,0 +1,9 @@
+{
+  "canonical_name": "check_key",
+  "descriptor": {
+    "file_path": "linear_sidebar/cli.py",
+    "name": "check_key"
+  },
+  "entity_id": "01M4NM1TK85B65Y0APRZE6HHFJ",
+  "kind": "concrete"
+}

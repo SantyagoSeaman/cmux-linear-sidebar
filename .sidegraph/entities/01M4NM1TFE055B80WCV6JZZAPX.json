@@ -1,0 +1,9 @@
+{
+  "canonical_name": "uninstall.sh",
+  "descriptor": {
+    "file_path": "uninstall.sh",
+    "name": "uninstall.sh"
+  },
+  "entity_id": "01M4NM1TFE055B80WCV6JZZAPX",
+  "kind": "concrete"
+}

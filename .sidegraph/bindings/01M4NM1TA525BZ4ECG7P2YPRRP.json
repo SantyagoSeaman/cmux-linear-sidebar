@@ -1,0 +1,32 @@
+[
+  {
+    "entity_id": "01M4NM1TAEMW1HFKMRK8DH7S5D",
+    "relation": "affects",
+    "tier": 0,
+    "weight": 1.0
+  },
+  {
+    "entity_id": "01M4NM1TAGH0B13MNGDMGHEHX0",
+    "relation": "affects",
+    "tier": 0,
+    "weight": 1.0
+  },
+  {
+    "entity_id": "01M4NM1TA78M7FTNCVDPS1Y7X9",
+    "relation": "affects",
+    "tier": 2,
+    "weight": 1.0
+  },
+  {
+    "entity_id": "01M4NM1TA97HJY744CV9VBY2H6",
+    "relation": "affects",
+    "tier": 2,
+    "weight": 1.0
+  },
+  {
+    "entity_id": "01M4NM1TACD75DN5EMGSH7BQD8",
+    "relation": "affects",
+    "tier": 2,
+    "weight": 1.0
+  }
+]

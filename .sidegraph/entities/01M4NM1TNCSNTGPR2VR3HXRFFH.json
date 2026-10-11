@@ -1,0 +1,9 @@
+{
+  "canonical_name": "query",
+  "descriptor": {
+    "file_path": "linear_sidebar/linear.py",
+    "name": "query"
+  },
+  "entity_id": "01M4NM1TNCSNTGPR2VR3HXRFFH",
+  "kind": "concrete"
+}

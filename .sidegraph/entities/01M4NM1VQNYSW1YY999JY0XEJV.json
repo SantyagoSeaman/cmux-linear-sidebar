@@ -1,0 +1,9 @@
+{
+  "canonical_name": "selected_workspace",
+  "descriptor": {
+    "file_path": "linear_sidebar/workspace.py",
+    "name": "selected_workspace"
+  },
+  "entity_id": "01M4NM1VQNYSW1YY999JY0XEJV",
+  "kind": "concrete"
+}

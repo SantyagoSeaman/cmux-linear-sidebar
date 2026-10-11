@@ -1,0 +1,22 @@
+{
+  "id": "01M4NPPP7VH2ST20YZYBPY8X26",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:c60fc539aa7d",
+    "ref": null,
+    "session_id": null,
+    "source": "agent"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "source": "`cmux browser <surface> eval` on the live Dock page, cmux 0.65.0, 2026-10-11",
+  "statement": "The cmux Dock browser loads the sidebar page as a top-level document (window.top === window, no frameElement), so a `frame-ancestors 'none'` response header does not affect it.",
+  "status": "proposed",
+  "supersedes": null,
+  "supports": [
+    "01M4NPDG8NKKXV390RPYN9P24W"
+  ],
+  "valid_from": "2026-10-11T14:43:37.780208Z",
+  "valid_to": null
+}

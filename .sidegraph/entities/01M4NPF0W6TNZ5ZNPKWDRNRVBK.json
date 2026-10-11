@@ -1,0 +1,9 @@
+{
+  "canonical_name": "origin_repo",
+  "descriptor": {
+    "file_path": "linear_sidebar/workspace.py",
+    "name": "origin_repo"
+  },
+  "entity_id": "01M4NPF0W6TNZ5ZNPKWDRNRVBK",
+  "kind": "concrete"
+}

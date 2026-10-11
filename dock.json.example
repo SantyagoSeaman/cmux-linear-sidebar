@@ -1,0 +1,11 @@
+{
+  "controls": [
+    {
+      "id": "linear-sidebar",
+      "title": "Linear",
+      "type": "browser",
+      "url": "http://127.0.0.1:47801/",
+      "chrome": false
+    }
+  ]
+}

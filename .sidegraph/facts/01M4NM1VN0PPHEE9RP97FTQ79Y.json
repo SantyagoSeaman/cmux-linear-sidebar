@@ -1,0 +1,22 @@
+{
+  "id": "01M4NM1VN0PPHEE9RP97FTQ79Y",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "source": "Live GraphQL call, 2026-10-11",
+  "statement": "Linear answers issue(id:) for an unknown identifier with HTTP 200, data null and a GraphQL error whose message is 'Entity not found: Issue' (extensions.code INPUT_ERROR), not with a null issue.",
+  "status": "accepted",
+  "supersedes": null,
+  "supports": [
+    "01M4NM1TN7ZJQXC7G8D5XYJV5Z"
+  ],
+  "valid_from": "2026-10-11T13:57:18.096741Z",
+  "valid_to": null
+}

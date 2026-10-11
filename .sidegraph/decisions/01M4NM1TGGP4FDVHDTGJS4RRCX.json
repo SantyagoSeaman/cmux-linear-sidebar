@@ -1,0 +1,25 @@
+{
+  "choice": "dock-setup.sh waits until /api/state answers, then runs `cmux browser <surface> reload`; from then on web/app.js reconnects by itself.",
+  "consequences": null,
+  "context": "Right after install the Linear tab showed the browser's 'Can't reach this page'.",
+  "id": "01M4NM1TGGP4FDVHDTGJS4RRCX",
+  "kind": "gotcha",
+  "layer": "technical",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "Relying on the page's reconnect logic: the browser's error page is not our page, so none of our script runs.",
+  "scope": "repo",
+  "status": "accepted",
+  "supersedes": null,
+  "title": "A Dock page opened before its server listens never retries",
+  "valid_from": "2026-10-11T13:57:16.931083Z",
+  "valid_to": null
+}

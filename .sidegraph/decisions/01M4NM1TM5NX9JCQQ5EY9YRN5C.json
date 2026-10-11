@@ -1,0 +1,25 @@
+{
+  "choice": "Answer only Host 127.0.0.1 or localhost on our port (DNS rebinding). POST endpoints need the page's Origin or none, Content-Type application/json, and no Sec-Fetch-Site cross-site (CSRF). /api/open accepts only plain https://linear.app links. The page has a Content Security Policy and renders Linear text with textContent.",
+  "consequences": null,
+  "context": "Any page open in the user's browser can send requests to 127.0.0.1.",
+  "id": "01M4NM1TM5NX9JCQQ5EY9YRN5C",
+  "kind": "adr",
+  "layer": "technical",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "The Host check alone (an earlier version): a cross-site no-cors POST could open any linear.app URL in the user's browser or exhaust the API key's rate limit through /api/refresh.",
+  "scope": "repo",
+  "status": "superseded",
+  "supersedes": null,
+  "title": "Harden the localhost server against other websites",
+  "valid_from": "2026-10-11T13:57:17.048831Z",
+  "valid_to": "2026-10-11T14:38:36.805203Z"
+}

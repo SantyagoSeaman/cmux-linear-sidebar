@@ -1,0 +1,9 @@
+{
+  "canonical_name": "server_terminal",
+  "descriptor": {
+    "file_path": "scripts/dock_surfaces.py",
+    "name": "server_terminal"
+  },
+  "entity_id": "01M4NPF0REH4E3XNYANK387F1K",
+  "kind": "concrete"
+}

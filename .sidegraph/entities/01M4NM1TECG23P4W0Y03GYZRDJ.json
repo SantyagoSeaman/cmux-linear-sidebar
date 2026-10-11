@@ -1,0 +1,9 @@
+{
+  "canonical_name": "make_handler",
+  "descriptor": {
+    "file_path": "linear_sidebar/server.py",
+    "name": "make_handler"
+  },
+  "entity_id": "01M4NM1TECG23P4W0Y03GYZRDJ",
+  "kind": "concrete"
+}

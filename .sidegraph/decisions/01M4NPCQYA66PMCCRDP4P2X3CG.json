@@ -1,0 +1,25 @@
+{
+  "choice": "scripts/dock-setup.sh starts the helper with `cmux new-surface --placement dock --pane <page pane>` as a background tab of the page's pane; the helper titles its tab 'Linear server' with an OSC escape; a resume binding lets cmux restart it after a relaunch once the user approves Auto-Restore. scripts/dock_surfaces.py takes a terminal for the server's only when it is titled 'Linear server' or its resume binding (`surface resume show --json`) starts cmux-linear-sidebar; right after opening the tab, dock-setup.sh passes the terminals that existed before (--created-after) and takes the one new terminal. Settings other than the defaults go into the typed command and the resume argv as --port and --refresh-seconds; an unchanged binding is left alone so it keeps its approval. The scripts stop a process on the port only when `ps` shows it runs cmux-linear-sidebar and /api/state answers with app 'cmux-linear-sidebar'.",
+  "consequences": null,
+  "context": "The helper asks the cmux CLI which workspace is selected. With the default automation.socketControlMode cmuxOnly, cmux answers only processes started inside its terminals. A review showed that taking the only terminal beside the page for the server let dock-setup.sh type into, and uninstall.sh close, a user's own shell.",
+  "id": "01M4NPCQYA66PMCCRDP4P2X3CG",
+  "kind": "adr",
+  "layer": null,
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:c60fc539aa7d",
+    "ref": null,
+    "session_id": null,
+    "source": "agent"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "A launchd agent with socket mode `automation` (any process of the user could drive cmux; the user called a system service overkill); socket mode `password` (unverified effect on agent hooks in cmux terminals); reading cmux's session-restore file instead of the socket (undocumented format); the first layout, with the terminal as a visible Dock section above the page (the user disliked the extra window); treating the only terminal beside the page as the server (a user's shell got the server command typed into it and was closed by uninstall); matching 'cmux-linear-sidebar' anywhere in a binding's command string (agent bindings start with `cd -- '<repo folder>'`, which has the same name); any JSON with \"status\" on the port as proof of our server (another program could be killed).",
+  "scope": "repo",
+  "status": "accepted",
+  "supersedes": "01M4NM1T9682TJNE7Z2GH9KEE7",
+  "title": "Run the helper in a Dock terminal tab hidden behind the page, recognized by an explicit marker",
+  "valid_from": "2026-10-11T14:38:11.899240Z",
+  "valid_to": null
+}

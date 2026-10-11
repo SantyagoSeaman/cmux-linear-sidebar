@@ -1,0 +1,25 @@
+{
+  "choice": "dock.json.example holds the optional browser control with chrome:false; dock-setup.sh reuses a page pane seeded from it and adds the server tab.",
+  "consequences": null,
+  "context": "A Dock browser tab created from the CLI shows cmux's toolbar and address bar.",
+  "id": "01M4NM1TJ84WVT9GT37YD5HYZR",
+  "kind": "constraint",
+  "layer": "technical",
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:d63f934980f7",
+    "ref": null,
+    "session_id": null,
+    "source": "human"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "Hiding the toolbar from the CLI (new-pane and new-surface have no such option); writing the user's global ~/.config/cmux/dock.json from the installer (personal config, and it seeds only a Dock without a saved layout).",
+  "scope": "repo",
+  "status": "accepted",
+  "supersedes": null,
+  "title": "A chromeless Dock page needs a browser control in dock.json",
+  "valid_from": "2026-10-11T13:57:16.988210Z",
+  "valid_to": null
+}

@@ -1,0 +1,9 @@
+{
+  "canonical_name": "keychain_password",
+  "descriptor": {
+    "file_path": "linear_sidebar/config.py",
+    "name": "keychain_password"
+  },
+  "entity_id": "01M4NM1TK63F9HW8JQ81NNXP8S",
+  "kind": "concrete"
+}

@@ -1,0 +1,25 @@
+{
+  "choice": "The page polls /api/state every 1.5 s. The helper asks cmux only while the page has polled within 10 s, and Linear at most once a minute per workspace context, on a workspace or branch change, or on the refresh button, which also fetches the project list and workflow states again. A context ignores cmux's automatic workspace renames; only an issue ID in the title counts. After a load the helper asks cmux again and shows the result only if the same workspace is still selected.",
+  "consequences": "Several cmux windows share one helper and show the workspace the CLI reports as selected.",
+  "context": "The user accepted that nothing updates while the panel is hidden.",
+  "id": "01M4NPDGAK4VYS05XK812ERDES",
+  "kind": "adr",
+  "layer": null,
+  "provenance": {
+    "author": null,
+    "commit": null,
+    "graph_version": "content:c60fc539aa7d",
+    "ref": null,
+    "session_id": null,
+    "source": "agent"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "Polling every workspace in the background to show status pills in the native list (that feature was dropped); subscribing to cmux's event stream (not needed for the first version); a refresh button that kept the 10-minute project cache (a project link added in Linear stayed invisible).",
+  "scope": "repo",
+  "status": "accepted",
+  "supersedes": "01M4NM1TDBDE4RFDHYC0NHWQZ4",
+  "title": "Refresh only while the page is open",
+  "valid_from": "2026-10-11T14:38:36.868616Z",
+  "valid_to": null
+}

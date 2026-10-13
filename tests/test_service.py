@@ -6,12 +6,13 @@ from unittest import mock
 
 from linear_sidebar import service as service_module
 from linear_sidebar.config import KeychainError, Settings
-from linear_sidebar.linear import LinearError
+from linear_sidebar.linear import LinearError, ProjectIssues
 from linear_sidebar.service import SidebarService
 from linear_sidebar.workspace import CmuxError, GitError, Workspace
 
 STARTED = {"id": "s1", "name": "In Progress", "type": "started", "color": "#f2c94c", "position": 1}
 TODO = {"id": "s2", "name": "Todo", "type": "unstarted", "color": "#e2e2e2", "position": 0}
+BACKLOG = {"id": "s3", "name": "Backlog", "type": "backlog", "color": "#bec2c8", "position": 0}
 PROJECT = {"id": "p1", "name": "Gadget", "url": "https://linear.app/acme/project/gadget"}
 SETTINGS = Settings(host="127.0.0.1", port=0, cmux_bin="cmux", refresh_seconds=60)
 
@@ -70,7 +71,8 @@ class FakeClient:
         self._call("project_issues")
         if self.on_project_issues:
             self.on_project_issues()
-        return [linear_issue("GAD-2", TODO), linear_issue("GAD-1", STARTED)], False
+        return ProjectIssues([linear_issue("GAD-2", TODO), linear_issue("GAD-1", STARTED)], False,
+                             [linear_issue("GAD-3", BACKLOG, createdAt="2026-10-11T10:00:00Z")], 1, False)
 
 
 class Harness:
@@ -80,7 +82,9 @@ class Harness:
         self.client = client if client is not None else FakeClient()
         self.selected = workspace()
         self.now = 1000.0
-        clock = types.SimpleNamespace(monotonic=lambda: self.now, time=time.time, strftime=time.strftime)
+        # The wall clock moves with the test's clock; whole seconds keep the arithmetic exact.
+        clock = types.SimpleNamespace(monotonic=lambda: self.now, time=lambda: 1_760_000_000 + self.now,
+                                      strftime=time.strftime)
         patcher = mock.patch.object(service_module, "time", clock)
         patcher.start()
         self.stop = patcher.stop
@@ -116,6 +120,8 @@ class SidebarServiceTest(unittest.TestCase):
         self.assertEqual(view["current"]["id"], "GAD-1")
         self.assertEqual(view["project"]["via"], "issue")
         self.assertEqual([r["id"] for g in view["groups"] for r in g["issues"]], ["GAD-2"])
+        self.assertEqual([r["id"] for r in view["backlog"]["issues"]], ["GAD-3"])
+        self.assertEqual((view["project"]["open"], view["project"]["backlog"]), (2, 1))
 
     def test_project_from_repo_link_on_a_branch_without_issue(self):
         harness = self.harness()
@@ -152,6 +158,31 @@ class SidebarServiceTest(unittest.TestCase):
         harness.service.refresh()
         harness.tick()
         self.assertGreater(len(harness.client.calls), calls)
+        self.assertEqual(harness.client.calls.count("project_issues"), 2)
+
+    def test_workspaces_of_one_project_share_its_issues_while_they_are_fresh(self):
+        harness = self.harness()
+        first = harness.tick()
+        harness.now += SETTINGS.refresh_seconds / 2
+        harness.selected = workspace(branch="main", ws_id="ws2")
+        second = harness.tick()
+        self.assertEqual((second["project"]["via"], harness.client.calls.count("project_issues")), ("repo", 1))
+        # The second view is as old as the issues it shows, and is reloaded when they are due.
+        self.assertEqual(second["updatedAt"], first["updatedAt"])
+        harness.now += SETTINGS.refresh_seconds / 2 - 1
+        harness.tick()
+        self.assertEqual(harness.client.calls.count("project_issues"), 1)
+        harness.now += 2
+        harness.tick()
+        self.assertEqual(harness.client.calls.count("project_issues"), 2)
+
+    def test_issues_older_than_half_the_refresh_interval_are_fetched_again(self):
+        harness = self.harness()
+        harness.tick()
+        harness.now += SETTINGS.refresh_seconds / 2 + 1
+        harness.selected = workspace(branch="main", ws_id="ws2")
+        harness.tick()
+        self.assertEqual(harness.client.calls.count("project_issues"), 2)
 
     def test_refresh_finds_a_project_link_added_a_moment_ago(self):
         harness = self.harness()
@@ -257,6 +288,16 @@ class SidebarServiceTest(unittest.TestCase):
         harness.tick()
         self.assertGreater(len(harness.client.calls), calls)
 
+    def test_an_odd_project_answer_is_asked_again_on_the_retry(self):
+        harness = self.harness()
+        fetch = harness.client.project_issues
+        odd = [ProjectIssues([], False, [{"title": "an issue without an identifier"}], 1, False)]
+        harness.client.project_issues = lambda project_id: odd.pop() if odd else fetch(project_id)
+        self.assertIn("Unexpected error", harness.tick()["message"])
+        harness.now += service_module.ERROR_RETRY_SECONDS + 1
+        view = harness.tick()
+        self.assertEqual((view["status"], [r["id"] for r in view["backlog"]["issues"]]), ("ok", ["GAD-3"]))
+
     def test_a_workspace_switch_during_a_load_does_not_show_the_old_workspace(self):
         harness = self.harness()
         harness.client.on_project_issues = lambda: setattr(harness, "selected", workspace(ws_id="ws2", branch="main",
@@ -275,6 +316,42 @@ class SidebarServiceTest(unittest.TestCase):
             harness.selected = workspace(ws_id=f"ws{index}")
             harness.tick()
         self.assertEqual(len(harness.service._views), service_module.MAX_CACHED_VIEWS)
+
+
+class CachedTest(unittest.TestCase):
+    def test_keeps_the_most_recently_fetched_values_until_they_expire(self):
+        fetched = []
+        later = [0.0]
+        # Every fetch moves the clock by a second.
+        clock = types.SimpleNamespace(monotonic=lambda: float(len(fetched)) + later[0])
+        with mock.patch.object(service_module, "time", clock):
+            cache = service_module._Cached(10, lambda key: fetched.append(key) or key.upper(), size=2)
+            self.assertEqual([cache.get(k) for k in ("a", "b", "c", "b", "a")], ["A", "B", "C", "B", "A"])
+            self.assertEqual(fetched, ["a", "b", "c", "a"])
+            later[0] = 20
+            cache.get("a")
+            cache.invalidate()
+            cache.get("a")
+        self.assertEqual(fetched, ["a", "b", "c", "a", "a", "a"])
+
+
+    def test_a_failed_fetch_is_tried_again_next_time(self):
+        answers = ["old", RuntimeError("Linear is down"), "new"]
+        now = [0.0]
+
+        def fetch():
+            answer = answers.pop(0)
+            if isinstance(answer, Exception):
+                raise answer
+            return answer
+
+        with mock.patch.object(service_module, "time", types.SimpleNamespace(monotonic=lambda: now[0])):
+            cache = service_module._Cached(10, fetch)
+            self.assertEqual(cache.get(), "old")
+            now[0] = 20
+            with self.assertRaises(RuntimeError):
+                cache.get()
+            self.assertEqual(cache.get(), "new")
 
 
 class ApiKeyTest(unittest.TestCase):

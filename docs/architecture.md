@@ -59,13 +59,28 @@ For the selected workspace (`linear_sidebar/service.py`):
    than that, the counts get a `+`.
 4. **Board.** The project's issues in started and unstarted states, plus those
    completed or canceled in the last 24 hours (`completedAt`/`canceledAt` with
-   the relative date `-P1D`), up to 250; with more, the issue count gets a `+`.
+   the relative date `-P1D`), up to 250.
    `view.board` groups open issues by workflow state (started before
    unstarted, then by the state's position) and puts the closed ones in one
    collapsed group. States of different teams with the same type and name form
    one group, as on Linear's project board. The current issue and the open
    sub-issues on its card are left out; sub-issues closed in the last 24 hours
    stay in the closed group.
+5. **Backlog.** In the same request, the project's 100 newest issues in
+   backlog states (`orderBy: createdAt` returns the most recently created
+   first), shown newest first in one collapsed group after the closed one,
+   whatever the backlog states are called. When the backlog is larger, the
+   group ends with a **More** link to the project's issues in Linear
+   (`<project URL>/issues`, where the backlog is one of the groups; Linear has
+   no link to a project's backlog alone). The limit keeps the page fast: with
+   every group open, 160 rows render in about 40 ms, while 1,000 backlog rows
+   took about half a second per render, and the page renders again at every
+   change.
+6. **Counts.** The project line shows its open issues (started and
+   unstarted, the card's among them) and the size of its backlog, such as
+   `19 open · 103 backlog`. Linear's issue lists have no total count, so the
+   same request also lists the ids of up to 250 backlog issues; past a page,
+   a count gets a `+`. The id list did not slow the request measurably.
 
 Status icons follow Linear: a started state's pie is half full for a team's
 first started state and three quarters for its last (`view.started_fills`),
@@ -83,10 +98,25 @@ using each team's workflow states, fetched once an hour.
   workspaces by itself (after the running agent's conversation, for example);
   such a rename only updates the header. A new context shows its cached view at
   once and is reloaded when older than `LINEAR_SIDEBAR_REFRESH_SECONDS` (60 by
-  default). Up to 50 views are cached. The project list is cached for 10
-  minutes, workflow states for an hour. The refresh button reloads the view
-  and also fetches the project list and workflow states again, so a project
-  link added a moment ago is found.
+  default). Up to 50 views are cached. The workspaces of one project, such as
+  several branches or worktrees of one repository, share its board and
+  backlog for half that interval; up to 20 projects are kept. A view is as
+  old as the issues it shows, and the half keeps a view built from shared
+  issues from being due again right after it loaded. So the first reload
+  after switching to such a workspace can come after half the interval
+  rather than a whole one; from then on the workspaces of the project reload
+  together, with one project query between them. The project list is cached
+  for 10 minutes, workflow states for an hour. The refresh button reloads
+  the view and also fetches the project's issues, the project list and
+  workflow states again, so a project link added a moment ago is found.
+- One load costs two or three Linear requests: the current issue by branch
+  (and by the workspace title when the branch finds none), and the
+  project's board and backlog in one query; the project list is usually
+  cached. A workspace open all the time costs about 120 requests an hour,
+  against the 2,500 an hour that Linear allows an API key. Complexity is no
+  concern: Linear counted 13 points (`X-Complexity`) for a board of 61
+  issues, the 100 newest of 103 backlog issues and their count, of the
+  3,000,000 an hour it allows.
 - Linear can take seconds to answer. After a load the poller asks cmux again
   and shows the result only if the same workspace is still selected.
 - When Linear fails, the last good view stays on screen with an error banner;
@@ -199,8 +229,8 @@ python3 -m unittest discover -s tests -t .
 
 | Test file | Covers |
 | --- | --- |
-| `tests/test_view.py` | Turning Linear data into the view: groups, sorting, the card, project choice, colours |
-| `tests/test_service.py` | The poller with a fake cmux and a fake Linear: caching, refresh, errors, renames |
+| `tests/test_view.py` | Turning Linear data into the view: groups, the backlog, counts, sorting, the card, project choice, colours |
+| `tests/test_service.py` | The poller with a fake cmux and a fake Linear: caching, issues shared within a project, refresh, errors, renames |
 | `tests/test_linear.py` | The GraphQL client against canned HTTP answers, including broken ones |
 | `tests/test_server.py` | The HTTP server on a random port: host and origin checks, `/api/open` validation |
 | `tests/test_workspace.py` | git in temporary folders and a fake `cmux` executable |

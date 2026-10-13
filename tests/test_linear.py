@@ -130,10 +130,22 @@ class ClientTest(unittest.TestCase):
             self.assertEqual(self.client.projects()[1], False)
 
     def test_project_issues_report_more_pages(self):
-        payload = {"data": {"issues": {"nodes": [{"identifier": "A-1"}], "pageInfo": {"hasNextPage": True}}}}
+        payload = {"data": {
+            "board": {"nodes": [{"identifier": "A-1"}], "pageInfo": {"hasNextPage": True}},
+            "backlog": {"nodes": [{"identifier": "A-2"}, None]},
+            "backlogIds": {"nodes": [{"id": "a2"}, {"id": "a3"}], "pageInfo": {"hasNextPage": True}},
+        }}
         with mock.patch("urllib.request.urlopen", return_value=answer(payload)):
-            issues, more = self.client.project_issues("p1")
-        self.assertEqual(([i["identifier"] for i in issues], more), (["A-1"], True))
+            found = self.client.project_issues("p1")
+        self.assertEqual(([i["identifier"] for i in found.board], found.board_more), (["A-1"], True))
+        self.assertEqual(([i["identifier"] for i in found.backlog], found.backlog_count, found.backlog_count_more),
+                         (["A-2"], 2, True))
+
+    def test_project_issues_without_a_backlog(self):
+        payload = {"data": {"board": {"nodes": [], "pageInfo": {"hasNextPage": False}}, "backlog": None,
+                            "backlogIds": None}}
+        with mock.patch("urllib.request.urlopen", return_value=answer(payload)):
+            self.assertEqual(self.client.project_issues("p1"), linear.ProjectIssues([], False, [], 0, False))
 
     def test_projects_for_url_skips_issues_without_project(self):
         payload = {"data": {"attachmentsForURL": {"nodes": [

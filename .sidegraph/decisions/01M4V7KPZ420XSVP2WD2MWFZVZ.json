@@ -1,0 +1,25 @@
+{
+  "choice": "A card with the current issue, its parent, a sub-issue progress bar and its open sub-issues; below it the project's board: started and unstarted states, then a collapsed 'Closed · 24h' group (completedAt or canceledAt within -P1D), then a collapsed 'Backlog' group: the project's 100 newest issues in backlog-type states (orderBy: createdAt), newest first, in the same GraphQL request as the board. The group's count is the whole backlog; when it is larger than the listed issues, the group ends with a 'More' link to <project url>/issues. The project line shows '<open> open · <backlog> backlog': open counts started and unstarted issues, the card's among them; the backlog size comes from a list of up to 250 backlog ids in the same request, with '+' past a page. Groups follow workflow state type and name, so the same state of several teams is one group; the backlog is one group whatever its states are called. The current issue and its open sub-issues are left off the board and the backlog list.",
+  "consequences": null,
+  "context": "Four mockups were compared: a by-status board, a tree around the current issue, a project found by repository link on main, and the empty state. The user defined current issues as In Progress, In Review and Todo plus issues closed in the last 24 hours. Later the user asked for the project's backlog after the closed group, at most the 100 most recently created with the rest behind a 'More' link to Linear. The user then found the header's 'N more issues' (the board groups' sum: open plus closed in 24 hours, without the backlog) unrelated to reality and chose open issues plus the backlog's size.",
+  "id": "01M4V7KPZ420XSVP2WD2MWFZVZ",
+  "kind": "adr",
+  "layer": null,
+  "provenance": {
+    "author": null,
+    "commit": "82350e490ff813868e241b6469f5f9cd7e869725",
+    "graph_version": "content:c60fc539aa7d",
+    "ref": null,
+    "session_id": null,
+    "source": "agent"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "rejected": "Board only: no sub-issue context. Tree only: loses the familiar board. Filtering by state names (custom per team) instead of state types. A workspace list inside the panel (not needed once the panel moved to the right sidebar). The whole backlog with pagination (1,000 rows took about half a second per render, and the page re-renders on every change). A separate backlog request with a longer cache and changes merged in (an extra request and a backlog out of step with the board, for a list capped at 100). Linking 'More' to /team/<KEY>/backlog (the team's backlog across all its projects). A header count summing the shown groups (mixed open and recently closed issues and left out the backlog). Counting through searchIssues totalCount (full-text search with its own limit of 30 requests a minute). A single '122 open' number, only active issues, or no number (offered to the user, not chosen).",
+  "scope": "repo",
+  "status": "accepted",
+  "supersedes": "01M4V5M7GC8ZHTM196HYHD2767",
+  "title": "Panel layout: current-issue card, the project's status board and newest backlog, open and backlog counts",
+  "valid_from": "2026-10-13T18:15:18.229142Z",
+  "valid_to": null
+}

@@ -17,9 +17,9 @@
   "ratified_by": null,
   "rejected": "Board only: no sub-issue context. Tree only: loses the familiar board. Filtering by state names (custom per team) instead of state types. A workspace list inside the panel (not needed once the panel moved to the right sidebar).",
   "scope": "repo",
-  "status": "accepted",
+  "status": "superseded",
   "supersedes": null,
   "title": "Panel layout: current-issue card with sub-issues above the project's status board",
   "valid_from": "2026-10-11T13:57:16.797780Z",
-  "valid_to": null
+  "valid_to": "2026-10-13T17:40:38.003334Z"
 }

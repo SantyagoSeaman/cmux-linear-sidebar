@@ -17,9 +17,9 @@
   "ratified_by": null,
   "rejected": "Polling every workspace in the background to show status pills in the native list (that feature was dropped); subscribing to cmux's event stream (not needed for the first version); a refresh button that kept the 10-minute project cache (a project link added in Linear stayed invisible).",
   "scope": "repo",
-  "status": "accepted",
+  "status": "superseded",
   "supersedes": "01M4NM1TDBDE4RFDHYC0NHWQZ4",
   "title": "Refresh only while the page is open",
   "valid_from": "2026-10-11T14:38:36.868616Z",
-  "valid_to": null
+  "valid_to": "2026-10-13T17:40:38.108140Z"
 }

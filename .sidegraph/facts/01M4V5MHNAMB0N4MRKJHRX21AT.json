@@ -1,0 +1,22 @@
+{
+  "id": "01M4V5MHNAMB0N4MRKJHRX21AT",
+  "provenance": {
+    "author": null,
+    "commit": "82350e490ff813868e241b6469f5f9cd7e869725",
+    "graph_version": "content:c60fc539aa7d",
+    "ref": null,
+    "session_id": null,
+    "source": "agent"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "source": "Live GraphQL calls from the Dock helper's LinearClient, 2026-10-13",
+  "statement": "Linear's issues(orderBy: createdAt) returns the most recently created issues first: for a project with 103 backlog issues, the first 100 were exactly the 100 newest.",
+  "status": "proposed",
+  "supersedes": null,
+  "supports": [
+    "01M4V5M7GC8ZHTM196HYHD2767"
+  ],
+  "valid_from": "2026-10-13T17:40:48.410382Z",
+  "valid_to": null
+}

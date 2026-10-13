@@ -10,8 +10,10 @@ terminals, in the [cmux](https://cmux.com) Dock.
 - **Your current issue**, found from the git branch name (like
   `abc-123-fix-login`), with its parent issue, its open sub-issues and a
   progress bar.
-- **The project's board**: In Progress, In Review, Todo, and the issues closed
-  in the last 24 hours.
+- **The project's board**: In Progress, In Review, Todo, the issues closed
+  in the last 24 hours, and the 100 newest issues in the backlog, with a link
+  to the rest in Linear. The project line counts its open issues and its
+  backlog, like `19 open · 103 backlog`.
 - **It follows you**: select another workspace in cmux and the sidebar switches
   to that project.
 - Click an issue to open it in your browser.
@@ -156,6 +158,11 @@ A small Python program runs in the **Linear server** tab of the Dock, asks cmux
 which workspace is selected, reads its git branch, queries the Linear API, and
 serves the page you see in the **Linear** tab. The details, including the cmux
 behaviour it depends on, are in [docs/architecture.md](docs/architecture.md).
+
+It asks Linear only while the Linear tab is open, and about once a minute for
+the selected workspace. Switching workspaces shows each one's last view at
+once, and the workspaces of one project, such as several branches of one
+repository, share its issues, so moving between them adds little.
 
 To run the tests:
 

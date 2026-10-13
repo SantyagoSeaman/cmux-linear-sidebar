@@ -6,7 +6,7 @@ import http.client
 import json
 import urllib.error
 import urllib.request
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, NamedTuple, Optional, Tuple
 
 ENDPOINT = "https://api.linear.app/graphql"
 TIMEOUT_SECONDS = 8
@@ -14,10 +14,13 @@ PAGE_SIZE = 250  # Linear's maximum for `first`.
 PROJECTS_PER_PAGE = 50
 MAX_PROJECT_PAGES = 10
 LINKS_PER_PROJECT = 50
+BACKLOG_LIMIT = 100
 
 _STATE = "state { id name type color position }"
 _ISSUE = f"identifier title url priority updatedAt {_STATE}"
 _LISTED = f"{_ISSUE} completedAt canceledAt parent {{ identifier }}"
+_BACKLOG = f"{_ISSUE} createdAt"
+_IN_BACKLOG = 'project: { id: { eq: $projectId } }, state: { type: { eq: "backlog" } }'
 _CURRENT = (
     f"{_ISSUE} project {{ id name url }}"
     f" parent {{ identifier title url }}"
@@ -40,10 +43,12 @@ STARTED_STATES = (
     f'query {{ workflowStates(first: {PAGE_SIZE}, filter: {{ type: {{ eq: "started" }} }})'
     " { nodes { id position team { id } } } }"
 )
-# "Current" issues: started (In Progress, In Review) and unstarted (Todo) states,
-# plus issues closed during the last 24 hours.
+# The board's "current" issues: started (In Progress, In Review) and unstarted (Todo)
+# states, plus issues closed during the last 24 hours. In the same request, the newest
+# backlog issues (orderBy createdAt returns the most recently created first), and the
+# ids of up to a page of backlog issues to count them.
 PROJECT_ISSUES = f"""query($projectId: ID!) {{
-  issues(first: {PAGE_SIZE}, filter: {{
+  board: issues(first: {PAGE_SIZE}, filter: {{
     project: {{ id: {{ eq: $projectId }} }}
     or: [
       {{ state: {{ type: {{ in: ["started", "unstarted"] }} }} }}
@@ -51,9 +56,25 @@ PROJECT_ISSUES = f"""query($projectId: ID!) {{
       {{ canceledAt: {{ gt: "-P1D" }} }}
     ]
   }}) {{ nodes {{ {_LISTED} }} pageInfo {{ hasNextPage }} }}
+  backlog: issues(first: {BACKLOG_LIMIT}, orderBy: createdAt, filter: {{ {_IN_BACKLOG} }}) {{ nodes {{ {_BACKLOG} }} }}
+  backlogIds: issues(first: {PAGE_SIZE}, filter: {{ {_IN_BACKLOG} }}) {{ nodes {{ id }} pageInfo {{ hasNextPage }} }}
 }}"""
 
 Node = Dict[str, Any]
+
+
+class ProjectIssues(NamedTuple):
+    """A project's board, its newest backlog issues, and how many backlog issues it has.
+
+    `board_more` says Linear had more board issues than one page; `backlog_count_more`
+    that it has more backlog issues than one page, so `backlog_count` is a lower bound.
+    """
+
+    board: List[Node]
+    board_more: bool
+    backlog: List[Node]
+    backlog_count: int
+    backlog_count_more: bool
 
 
 class LinearError(Exception):
@@ -162,10 +183,12 @@ class LinearClient:
     def started_states(self) -> List[Node]:
         return _nodes(self.query(STARTED_STATES), "workflowStates")
 
-    def project_issues(self, project_id: str) -> Tuple[List[Node], bool]:
-        """The project's current issues, and whether Linear had more than one page of them."""
+    def project_issues(self, project_id: str) -> ProjectIssues:
+        """The project's current issues, its BACKLOG_LIMIT newest backlog issues and the size
+        of its backlog, in one request."""
         data = self.query(PROJECT_ISSUES, projectId=project_id)
-        return _nodes(data, "issues"), _has_next_page(data.get("issues"))
+        return ProjectIssues(_nodes(data, "board"), _has_next_page(data.get("board")), _nodes(data, "backlog"),
+                             len(_nodes(data, "backlogIds")), _has_next_page(data.get("backlogIds")))
 
 
 def _json_or_none(error: urllib.error.HTTPError) -> Optional[Any]:

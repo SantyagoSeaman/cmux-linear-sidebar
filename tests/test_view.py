@@ -1,6 +1,7 @@
 import unittest
 
 from linear_sidebar import view
+from linear_sidebar.linear import ProjectIssues
 from linear_sidebar.workspace import Workspace
 
 STARTED = {"id": "s-progress", "name": "In Progress", "type": "started", "color": "#f2c94c", "position": 2}
@@ -8,6 +9,8 @@ REVIEW = {"id": "s-review", "name": "In Review", "type": "started", "color": "#0
 TODO = {"id": "s-todo", "name": "Todo", "type": "unstarted", "color": "#e2e2e2", "position": 1}
 DONE = {"id": "s-done", "name": "Done", "type": "completed", "color": "#5e6ad2", "position": 3}
 CANCELED = {"id": "s-canceled", "name": "Canceled", "type": "canceled", "color": "#95a2b3", "position": 4}
+BACKLOG = {"id": "s-backlog", "name": "Backlog", "type": "backlog", "color": "#bec2c8", "position": 0}
+ICEBOX = {"id": "s-icebox", "name": "Icebox", "type": "backlog", "color": "#95a2b3", "position": 1}
 
 
 def issue(identifier, state, priority=0, parent=None, updated="2026-10-11T10:00:00Z", **extra):
@@ -132,6 +135,40 @@ class BoardTest(unittest.TestCase):
         self.assertEqual(len({g["key"] for g in groups}), len(groups))
 
 
+class BacklogTest(unittest.TestCase):
+    URL = "https://linear.app/acme/project/p1/issues"
+
+    def test_one_collapsed_group_newest_first(self):
+        group = view.backlog([
+            issue("SAN-1", BACKLOG, createdAt="2026-09-01T10:00:00Z"),
+            issue("SAN-3", ICEBOX, priority=1, createdAt="2026-10-01T10:00:00Z"),
+            issue("SAN-2", BACKLOG, createdAt="2026-09-15T10:00:00Z"),
+        ], 3, False, [], {}, self.URL)
+        self.assertEqual((group["key"], group["name"], group["count"], group["countMore"], group["collapsed"]),
+                         ("backlog", "Backlog", 3, False, True))
+        self.assertIsNone(group["more"])
+        self.assertEqual([r["id"] for r in group["issues"]], ["SAN-3", "SAN-2", "SAN-1"])
+        self.assertEqual(group["icon"], {"shape": "backlog", "color": "#95a2b3"})
+
+    def test_a_partial_list_links_to_linear(self):
+        listed = [issue("SAN-1", BACKLOG), issue("SAN-2", BACKLOG)]
+        self.assertEqual(view.backlog(listed, 3, False, [], {}, self.URL)["more"], self.URL)
+        counted_part = view.backlog(listed, 250, True, [], {}, self.URL)
+        self.assertEqual((counted_part["count"], counted_part["countMore"], counted_part["more"]), (250, True, self.URL))
+
+    def test_issues_on_the_card_are_left_out_but_counted(self):
+        group = view.backlog([issue("SAN-1", BACKLOG), issue("SAN-2", BACKLOG)], 2, False, ["SAN-1"], {}, self.URL)
+        self.assertEqual(([r["id"] for r in group["issues"]], group["count"], group["more"]), (["SAN-2"], 2, None))
+
+    def test_a_backlog_listed_only_on_the_card_keeps_its_link(self):
+        group = view.backlog([issue("SAN-1", BACKLOG)], 103, False, ["SAN-1"], {}, self.URL)
+        self.assertEqual((group["issues"], group["count"], group["more"]), ([], 103, self.URL))
+
+    def test_an_empty_backlog_is_no_group(self):
+        self.assertIsNone(view.backlog([], 0, False, [], {}, self.URL))
+        self.assertIsNone(view.backlog([issue("SAN-1", BACKLOG)], 1, False, ["SAN-1"], {}, self.URL))
+
+
 class CurrentCardTest(unittest.TestCase):
     def test_progress_counts_closed_sub_issues_and_lists_open_ones(self):
         current = issue("SAN-304", STARTED, children={"nodes": [
@@ -156,20 +193,24 @@ class CurrentCardTest(unittest.TestCase):
         self.assertEqual(card["subIssues"], [])
 
 
+def found(board=(), board_more=False, backlog=(), count=None, count_more=False):
+    return ProjectIssues(list(board), board_more, list(backlog), len(backlog) if count is None else count, count_more)
+
+
 class ReadyTest(unittest.TestCase):
     def test_no_issue_and_no_project_is_the_empty_state(self):
-        result = view.ready(workspace(branch="main"), None, None, None, None, [], False, {}, 0)
+        result = view.ready(workspace(branch="main"), None, None, None, None, found(), {}, 0)
         self.assertEqual(result["status"], "no-project")
         self.assertEqual(result["workspace"]["branch"], "main")
         self.assertNotIn("directory", result["workspace"])
 
     def test_project_from_repo_link(self):
         linked = project("p2", "Widget", "started")
-        result = view.ready(workspace(), None, None, linked, "repo", [issue("WID-1", TODO)], True, {}, 1)
+        result = view.ready(workspace(), None, None, linked, "repo", found([issue("WID-1", TODO)], True), {}, 1)
         self.assertEqual(result["status"], "ok")
         self.assertEqual(result["project"]["via"], "repo")
         self.assertEqual(result["groups"][0]["issues"][0]["id"], "WID-1")
-        self.assertTrue(result["truncated"])
+        self.assertEqual((result["project"]["open"], result["project"]["openMore"]), (1, True))
 
     def test_closed_sub_issues_stay_on_the_board_and_open_ones_move_to_the_card(self):
         current = issue("SAN-304", STARTED, children={"nodes": [
@@ -181,23 +222,43 @@ class ReadyTest(unittest.TestCase):
             issue("SAN-7", TODO),
         ]
         result = view.ready(workspace(), current, "branch", project("p1", "Gadget", "started"), "issue",
-                            board_issues, False, {}, 1)
+                            found(board_issues), {}, 1)
         self.assertEqual([s["id"] for s in result["current"]["subIssues"]], ["SAN-325"])
         self.assertEqual({g["name"]: [r["id"] for r in g["issues"]] for g in result["groups"]},
                          {"Todo": ["SAN-7"], "Closed · 24h": ["SAN-319"]})
 
+    def test_the_project_counts_open_issues_with_the_card_and_its_backlog(self):
+        current = issue("SAN-304", STARTED, children={"nodes": [issue("SAN-330", BACKLOG, parent="SAN-304")]})
+        board_issues = [issue("SAN-304", STARTED), issue("SAN-7", TODO),
+                        issue("SAN-5", DONE, completedAt="2026-10-11T09:00:00Z")]
+        result = view.ready(workspace(), current, "branch", project("p1", "Gadget", "started"), "issue",
+                            found(board_issues, backlog=[issue("SAN-330", BACKLOG), issue("SAN-8", BACKLOG)], count=103),
+                            {}, 1)
+        self.assertEqual({k: result["project"][k] for k in ("open", "openMore", "backlog", "backlogMore")},
+                         {"open": 2, "openMore": False, "backlog": 103, "backlogMore": False})
+        self.assertEqual([g["name"] for g in result["groups"]], ["Todo", "Closed · 24h"])
+        self.assertEqual([r["id"] for r in result["backlog"]["issues"]], ["SAN-8"])
+        self.assertEqual(result["backlog"]["more"], "https://linear.app/acme/project/p1/issues")
+
+    def test_the_backlog_count_is_never_below_the_listed_issues(self):
+        result = view.ready(workspace(), None, None, project("p1", "Gadget", "started"), "repo",
+                            found(backlog=[issue("SAN-8", BACKLOG), issue("SAN-9", BACKLOG)], count=1), {}, 1)
+        self.assertEqual((result["project"]["backlog"], result["backlog"]["count"], result["backlog"]["more"]),
+                         (2, 2, None))
+
     def test_a_message_explains_only_a_missing_project(self):
-        missing = view.ready(workspace(), None, None, None, None, [], False, {}, 1, message="searched 500")
+        missing = view.ready(workspace(), None, None, None, None, found(), {}, 1, message="searched 500")
         self.assertEqual((missing["status"], missing["message"]), ("no-project", "searched 500"))
-        found = view.ready(workspace(), None, None, project("p2", "Widget", "started"), "repo", [], False, {}, 1,
-                           message="searched 500")
-        self.assertIsNone(found["message"])
+        linked = view.ready(workspace(), None, None, project("p2", "Widget", "started"), "repo", found(), {}, 1,
+                            message="searched 500")
+        self.assertIsNone(linked["message"])
 
     def test_current_issue_without_project_has_no_board(self):
-        result = view.ready(workspace(), issue("SAN-1", TODO), "branch", None, None, [], False, {}, 1)
+        result = view.ready(workspace(), issue("SAN-1", TODO), "branch", None, None, found(), {}, 1)
         self.assertEqual(result["status"], "ok")
         self.assertIsNone(result["project"])
         self.assertEqual(result["groups"], [])
+        self.assertIsNone(result["backlog"])
         self.assertEqual(result["current"]["id"], "SAN-1")
 
 

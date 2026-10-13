@@ -1,0 +1,22 @@
+{
+  "id": "01M4V5MHQ2SJEF67RPQETDM0MP",
+  "provenance": {
+    "author": null,
+    "commit": "82350e490ff813868e241b6469f5f9cd7e869725",
+    "graph_version": "content:c60fc539aa7d",
+    "ref": null,
+    "session_id": null,
+    "source": "agent"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "source": "performance.now() around render() in Chrome on the live page, 2026-10-13",
+  "statement": "web/app.js render() rebuilds the whole page on every change: in Chrome it took about 4 ms with 18 rows, 39 ms (max 84) with 161 rows, and 510 ms (max 1.4 s) with 1,061 rows.",
+  "status": "proposed",
+  "supersedes": null,
+  "supports": [
+    "01M4V5M7GC8ZHTM196HYHD2767"
+  ],
+  "valid_from": "2026-10-13T17:40:48.471023Z",
+  "valid_to": null
+}

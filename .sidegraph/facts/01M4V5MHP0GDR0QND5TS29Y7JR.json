@@ -1,0 +1,22 @@
+{
+  "id": "01M4V5MHP0GDR0QND5TS29Y7JR",
+  "provenance": {
+    "author": null,
+    "commit": "82350e490ff813868e241b6469f5f9cd7e869725",
+    "graph_version": "content:c60fc539aa7d",
+    "ref": null,
+    "session_id": null,
+    "source": "agent"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "source": "Live GraphQL calls, response headers and timings, 2026-10-13; https://linear.app/developers/rate-limiting",
+  "statement": "Linear charged X-Complexity 12 for one request holding a project's board (61 issues, first: 250) and backlog (100 issues); the response headers give an API key 2,500 requests and 3,000,000 complexity points an hour (x-ratelimit-requests-limit, x-ratelimit-complexity-limit). The board query alone took about 170 ms, the board with the backlog about 215 ms (medians of 6).",
+  "status": "proposed",
+  "supersedes": null,
+  "supports": [
+    "01M4V5M7KACN4ZMNVF07SBCK4K"
+  ],
+  "valid_from": "2026-10-13T17:40:48.434927Z",
+  "valid_to": null
+}

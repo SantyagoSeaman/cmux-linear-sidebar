@@ -1,0 +1,22 @@
+{
+  "id": "01M4V5MHPHBYS1EDTG9SNFSZ1Q",
+  "provenance": {
+    "author": null,
+    "commit": "82350e490ff813868e241b6469f5f9cd7e869725",
+    "graph_version": "content:c60fc539aa7d",
+    "ref": null,
+    "session_id": null,
+    "source": "agent"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "source": "Checked in Chrome on linear.app and Linear's filter docs, 2026-10-13",
+  "statement": "Linear's web app has a team backlog page (/team/<KEY>/backlog) but no backlog page for a project, and no documented URL filter; <project url>/issues lists the project's issues grouped by status, with a Backlog group.",
+  "status": "proposed",
+  "supersedes": null,
+  "supports": [
+    "01M4V5M7GC8ZHTM196HYHD2767"
+  ],
+  "valid_from": "2026-10-13T17:40:48.453742Z",
+  "valid_to": null
+}

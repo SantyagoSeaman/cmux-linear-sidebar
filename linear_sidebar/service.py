@@ -10,7 +10,8 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from . import view
 from .config import ROOT, KeychainError, Settings
-from .linear import LinearClient, LinearError, LINKS_PER_PROJECT, MAX_PROJECT_PAGES, PROJECTS_PER_PAGE
+from .linear import (LinearClient, LinearError, LINKS_PER_PROJECT, MAX_PROJECT_PAGES, PROJECTS_PER_PAGE,
+                     ProjectIssues)
 from .workspace import CmuxError, GitError, Workspace, issue_key, pull_requests, selected_workspace
 
 POLL_SECONDS = 1.5
@@ -20,6 +21,8 @@ PROJECTS_TTL_SECONDS = 600
 STATES_TTL_SECONDS = 3600
 ERROR_RETRY_SECONDS = 15
 MAX_CACHED_VIEWS = 50
+MAX_CACHED_PROJECTS = 20
+NO_ISSUES = ProjectIssues([], False, [], 0, False)
 NEW_KEY_COMMAND = f"{shlex.quote(str(ROOT / 'install.sh'))} --new-key"
 UNEXPECTED_ERROR = "Unexpected error; the Linear server tab has the details"
 PROJECT_SEARCH_CUT = (f"Only the first {MAX_PROJECT_PAGES * PROJECTS_PER_PAGE} Linear projects and "
@@ -35,22 +38,29 @@ def log(message: str) -> None:
 
 
 class _Cached:
-    """A value fetched at most once per `ttl` seconds; a failed fetch is retried next time."""
+    """Values fetched at most once per `ttl` seconds for each tuple of arguments, keeping the
+    `size` most recently fetched; a failed fetch is retried next time."""
 
-    def __init__(self, ttl: float, fetch: Callable[[], Any]):
+    def __init__(self, ttl: float, fetch: Callable[..., Any], size: int = 1):
         self._ttl = ttl
         self._fetch = fetch
-        self._value: Any = None
-        self._fetched_at = float("-inf")
+        self._size = size
+        self._entries: Dict[Tuple, Tuple[Any, float]] = {}
 
-    def get(self) -> Any:
-        if time.monotonic() - self._fetched_at > self._ttl:
-            self._value = self._fetch()
-            self._fetched_at = time.monotonic()
-        return self._value
+    def get(self, *args: Any) -> Any:
+        return self.entry(*args)[0]
+
+    def entry(self, *args: Any) -> Tuple[Any, float]:
+        """The value and the time.monotonic() it was fetched at."""
+        entry = self._entries.get(args)
+        if entry is None or time.monotonic() - entry[1] > self._ttl:
+            entry = self._entries[args] = (self._fetch(*args), time.monotonic())
+            while len(self._entries) > self._size:
+                del self._entries[min(self._entries, key=lambda k: self._entries[k][1])]
+        return entry
 
     def invalidate(self) -> None:
-        self._fetched_at = float("-inf")
+        self._entries.clear()
 
 
 class SidebarService:
@@ -90,6 +100,12 @@ class SidebarService:
         self._projects = _Cached(PROJECTS_TTL_SECONDS, lambda: client.projects() if client else ([], True))
         self._fills = _Cached(STATES_TTL_SECONDS,
                               lambda: view.started_fills(client.started_states()) if client else {})
+        # Shared by the workspaces of one project, such as several branches of one repository.
+        # A view is as old as the issues it shows; for half the refresh interval they are
+        # fresh enough that a view built from them is not due again right away.
+        self._project_issues = _Cached(self._settings.refresh_seconds / 2,
+                                       lambda project_id: client.project_issues(project_id) if client else NO_ISSUES,
+                                       size=MAX_CACHED_PROJECTS)
         self._views.clear()
 
     def current(self) -> View:
@@ -172,8 +188,9 @@ class SidebarService:
             # The refresh button also picks up new project links and workflow states.
             self._projects.invalidate()
             self._fills.invalidate()
-        loaded = self._load(workspace, cached[0] if cached else None)
-        self._remember(context, loaded)
+            self._project_issues.invalidate()
+        loaded, loaded_at = self._load(workspace, cached[0] if cached else None)
+        self._remember(context, loaded, loaded_at)
         # Linear can take seconds; publish only if the user is still on this workspace.
         try:
             latest = self._workspace_source(self._settings.cmux_bin)
@@ -182,8 +199,7 @@ class SidebarService:
         if latest is not None and latest.context == context:
             self._publish(_with_workspace(loaded, latest))
 
-    def _remember(self, context: Tuple, loaded: View) -> None:
-        loaded_at = time.monotonic()
+    def _remember(self, context: Tuple, loaded: View, loaded_at: float) -> None:
         if loaded["status"] == "key-error":
             # Another read could raise the Keychain prompt again; wait for the refresh button.
             loaded_at = float("inf")
@@ -220,32 +236,38 @@ class SidebarService:
             log(message)
             self._last_key_note = message
 
-    def _load(self, workspace: Workspace, previous: Optional[View]) -> View:
+    def _load(self, workspace: Workspace, previous: Optional[View]) -> Tuple[View, float]:
+        """The view and the time.monotonic() its Linear data is from."""
         if self._client is None:
             instead = self._read_key(workspace)
             if instead is not None:
-                return instead
+                return instead, time.monotonic()
         try:
             issue, via = self._current_issue(workspace)
             project, project_via = (issue["project"], "issue") if issue and issue.get("project") else (None, None)
             searched_all = True
             if project is None:
                 project, project_via, searched_all = self._linked_project(workspace)
-            issues, truncated = self._client.project_issues(project["id"]) if project else ([], False)
-            return view.ready(workspace, issue, via, project, project_via, issues, truncated,
-                              self._fills.get(), int(time.time() * 1000),
-                              message=None if searched_all else PROJECT_SEARCH_CUT)
+            # Another workspace of the project may have fetched its issues a while ago:
+            # the view is as old as they are, and is reloaded when they are due.
+            found, fetched_at = (self._project_issues.entry(project["id"]) if project
+                                 else (NO_ISSUES, time.monotonic()))
+            updated_at = time.time() - (time.monotonic() - fetched_at)
+            return view.ready(workspace, issue, via, project, project_via, found, self._fills.get(),
+                              int(updated_at * 1000), message=None if searched_all else PROJECT_SEARCH_CUT), fetched_at
         except LinearError as error:
             log(f"Linear: {error}")
             message = str(error)
         except Exception:  # noqa: BLE001 - an odd answer must not skip the retry delay
             log("Unexpected error:\n" + traceback.format_exc().rstrip())
             message = UNEXPECTED_ERROR
+            # The odd answer may be a project's cached issues: the retry asks Linear again.
+            self._project_issues.invalidate()
         if previous and previous["status"] in ("ok", "no-project"):
             failed = _with_workspace(previous, workspace)
             failed["error"] = message
-            return failed
-        return view.state("error", workspace, message=message)
+            return failed, time.monotonic()
+        return view.state("error", workspace, message=message), time.monotonic()
 
     def _current_issue(self, workspace: Workspace) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
         assert self._client is not None

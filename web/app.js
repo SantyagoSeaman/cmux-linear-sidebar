@@ -138,12 +138,15 @@ function progress({ done, total, more }) {
   return h('div', { class: 'progress' }, bar, h('span', { class: 'muted' }, `${of} done`));
 }
 
+// A group with `more` lists only part of its issues; the link opens the rest in Linear.
 function group(g) {
   const key = `group:${g.key}`;
   const closed = isCollapsed(key, g.collapsed);
   return h('div', { class: 'group' },
-    toggle(key, closed, statusIcon(g.icon), h('span', { class: 'toggle-name' }, g.name), h('span', { class: 'muted' }, g.count)),
-    !closed && g.issues.map(issueRow));
+    toggle(key, closed, statusIcon(g.icon), h('span', { class: 'toggle-name' }, g.name),
+      h('span', { class: 'muted' }, `${g.count}${g.countMore ? '+' : ''}`)),
+    !closed && g.issues.map(issueRow),
+    !closed && g.more && link(g.more, { class: 'row more', title: 'The project’s issues in Linear' }, 'More'));
 }
 
 function board(view) {
@@ -151,7 +154,11 @@ function board(view) {
   if (!project) {
     return h('p', { class: 'muted pad' }, `${view.current.id} is not in a project.`);
   }
-  const total = `${view.groups.reduce((sum, g) => sum + g.count, 0)}${view.truncated ? '+' : ''}`;
+  // `+`: Linear had more than one page, so the count is a lower bound. A server started
+  // before the counts existed sends none.
+  const counts = [];
+  if (project.open != null) counts.push(`${project.open}${project.openMore ? '+' : ''} open`);
+  if (project.backlog > 0) counts.push(`${project.backlog}${project.backlogMore ? '+' : ''} backlog`);
   const via = {
     repo: view.workspace.repo && `linked by github.com/${view.workspace.repo}`,
     'pull-request': 'found through this branch’s pull request',
@@ -161,10 +168,11 @@ function board(view) {
       h('span', {}, 'Project'),
       link(project.url, {}, project.name),
       h('span', { class: 'spacer' }),
-      h('span', {}, view.current ? `${total} more issues` : `${total} issues`)),
+      h('span', {}, counts.join(' · '))),
     via && h('div', { class: 'via' }, svg('link'), via),
     view.groups.map(group),
     view.groups.length === 0 && h('p', { class: 'muted pad' }, 'Nothing in progress, to do, or closed in the last 24 hours.'),
+    view.backlog && group(view.backlog),
   ];
 }
 

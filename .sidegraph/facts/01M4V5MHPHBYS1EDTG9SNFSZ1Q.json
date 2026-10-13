@@ -8,11 +8,11 @@
     "session_id": null,
     "source": "agent"
   },
-  "ratified_at": null,
-  "ratified_by": null,
+  "ratified_at": "2026-10-13T18:26:35.024809Z",
+  "ratified_by": "Alexander Makeev",
   "source": "Checked in Chrome on linear.app and Linear's filter docs, 2026-10-13",
   "statement": "Linear's web app has a team backlog page (/team/<KEY>/backlog) but no backlog page for a project, and no documented URL filter; <project url>/issues lists the project's issues grouped by status, with a Backlog group.",
-  "status": "proposed",
+  "status": "accepted",
   "supersedes": null,
   "supports": [
     "01M4V5M7GC8ZHTM196HYHD2767"

@@ -8,11 +8,11 @@
     "session_id": null,
     "source": "agent"
   },
-  "ratified_at": null,
-  "ratified_by": null,
+  "ratified_at": "2026-10-13T18:26:35.005371Z",
+  "ratified_by": "Alexander Makeev",
   "source": "Live GraphQL calls from the Dock helper's LinearClient, 2026-10-13",
   "statement": "Linear's issues(orderBy: createdAt) returns the most recently created issues first: for a project with 103 backlog issues, the first 100 were exactly the 100 newest.",
-  "status": "proposed",
+  "status": "accepted",
   "supersedes": null,
   "supports": [
     "01M4V5M7GC8ZHTM196HYHD2767"

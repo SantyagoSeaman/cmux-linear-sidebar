@@ -8,11 +8,11 @@
     "session_id": null,
     "source": "agent"
   },
-  "ratified_at": null,
-  "ratified_by": null,
+  "ratified_at": "2026-10-13T18:28:48.876963Z",
+  "ratified_by": "Alexander Makeev",
   "source": "Observed with a temporary terminal tab and the live Dock, 2026-10-11",
   "statement": "In cmux 0.65.0, `cmux surface resume show --json --surface <ref>` for a terminal without a binding exits 0 with \"resume_binding\": null; agent-hook bindings (Claude Code, Codex) carry a `command` that starts with `cd -- '<working directory>'`. `cmux new-surface` prints `OK surface:<n> pane:<n> workspace:<n>`.",
-  "status": "proposed",
+  "status": "accepted",
   "supersedes": null,
   "supports": [
     "01M4NPCQYA66PMCCRDP4P2X3CG"

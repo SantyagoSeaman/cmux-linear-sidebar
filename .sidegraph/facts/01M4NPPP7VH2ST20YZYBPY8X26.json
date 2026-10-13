@@ -8,11 +8,11 @@
     "session_id": null,
     "source": "agent"
   },
-  "ratified_at": null,
-  "ratified_by": null,
+  "ratified_at": "2026-10-13T18:28:48.888075Z",
+  "ratified_by": "Alexander Makeev",
   "source": "`cmux browser <surface> eval` on the live Dock page, cmux 0.65.0, 2026-10-11",
   "statement": "The cmux Dock browser loads the sidebar page as a top-level document (window.top === window, no frameElement), so a `frame-ancestors 'none'` response header does not affect it.",
-  "status": "proposed",
+  "status": "accepted",
   "supersedes": null,
   "supports": [
     "01M4NPDG8NKKXV390RPYN9P24W"

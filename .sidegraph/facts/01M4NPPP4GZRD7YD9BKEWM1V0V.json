@@ -8,11 +8,11 @@
     "session_id": null,
     "source": "agent"
   },
-  "ratified_at": null,
-  "ratified_by": null,
+  "ratified_at": "2026-10-13T18:28:48.859970Z",
+  "ratified_by": "Alexander Makeev",
   "source": "Run on macOS 25.4 during development, 2026-10-11",
   "statement": "`/usr/bin/security find-generic-password -s <service> -w` exits 44 when the item does not exist (the low byte of errSecItemNotFound, -25300), printing 'The specified item could not be found in the keychain.' on stderr; other failures exit with other codes.",
-  "status": "proposed",
+  "status": "accepted",
   "supersedes": null,
   "supports": [
     "01M4NPCQT819E63865M623M32H"

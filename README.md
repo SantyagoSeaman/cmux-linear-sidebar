@@ -173,3 +173,10 @@ python3 -m unittest discover -s tests -t .
 ## License
 
 [MIT](LICENSE)
+
+## Built with Sidegraph
+
+This project is developed with [Sidegraph](https://github.com/SantyagoSeaman/sidegraph),
+decision memory for AI coding agents. The design decisions behind the sidebar, the
+alternatives that were dropped, and the cmux and Linear behaviour learned along the way
+are kept in `.sidegraph/`, anchored to the code they are about.

@@ -1,0 +1,22 @@
+{
+  "id": "01M4WRTZG6K5PC7JTRGQHMJK0K",
+  "provenance": {
+    "author": null,
+    "commit": "22aa4f66ca58474347145533afdfb09f23f1fb1a",
+    "graph_version": "22aa4f66ca58474347145533afdfb09f23f1fb1a:7aeea20ccd89",
+    "ref": null,
+    "session_id": "cb1490f1-a5c2-4303-a1bf-2c752eac51e2",
+    "source": "agent"
+  },
+  "ratified_at": null,
+  "ratified_by": null,
+  "source": "Observed on the live Dock 'Linear server' tab after a cmux relaunch to 0.65.1, 2026-10-14 (read-screen, env, cmux identify --json, restore with explicit id)",
+  "statement": "In cmux 0.65.1 a resume binding with auto_resume true on a global Dock terminal does not restart its command after a cmux relaunch: cmux types `cmux restore --surface` without an id into the restored shell, whose CMUX_WORKSPACE_ID is the window id (not a listed workspace), so `cmux identify` reports caller null and restore fails with 'the current cmux surface could not be identified'. `cmux restore --surface \"$CMUX_SURFACE_ID\"` in that tab works and keeps the binding.",
+  "status": "proposed",
+  "supersedes": null,
+  "supports": [
+    "01M4NM1THB8YQAKRRZVBVJVV00"
+  ],
+  "valid_from": "2026-10-14T08:35:36.567120Z",
+  "valid_to": null
+}

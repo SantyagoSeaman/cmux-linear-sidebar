@@ -117,6 +117,10 @@ class SidebarService:
         with self._lock:
             return self._view
 
+    def page_seen(self) -> bool:
+        """Whether a page has asked for the view since the server started."""
+        return self._last_request != float("-inf")
+
     def refresh(self) -> None:
         self._forced = True
         self._wake.set()

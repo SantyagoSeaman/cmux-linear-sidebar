@@ -7,8 +7,9 @@ import json
 import subprocess
 import sys
 import threading
+import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from typing import Any, Dict, Optional
+from typing import Any, Callable, Dict, List, Optional, Sequence
 from urllib.parse import urlsplit
 
 from . import config
@@ -16,6 +17,10 @@ from .service import SidebarService, log
 
 # Sent with every view, so the scripts can tell this server from another program on the port.
 APP = "cmux-linear-sidebar"
+# A page that loaded while the server was down shows the browser's error page, which
+# never retries: after cmux relaunches, the Dock opens the page before the server is back.
+# Seconds to wait before each check; a page asks for the view as soon as it loads.
+PAGE_CHECK_DELAYS = (2, 3, 5, 10)
 
 STATIC = {
     "/": ("index.html", "text/html; charset=utf-8"),
@@ -144,6 +149,54 @@ def make_handler(service: SidebarService, port: int):
     return Handler
 
 
+def page_surfaces(cmux_bin: str, port: int) -> List[str]:
+    """Refs of the cmux browser tabs showing this server's page; empty when cmux does not answer."""
+    try:
+        result = subprocess.run([cmux_bin, "tree", "--all", "--json"], capture_output=True, text=True, timeout=10)
+        tree = json.loads(result.stdout) if result.returncode == 0 else None
+    except (OSError, subprocess.SubprocessError, ValueError):
+        return []
+    prefixes = tuple(f"http://{host}:{port}/" for host in ("127.0.0.1", "localhost"))
+    refs: List[str] = []
+
+    def walk(node: Any) -> None:
+        if isinstance(node, dict):
+            ref, url = node.get("ref"), node.get("url")
+            if node.get("type") == "browser" and isinstance(ref, str) and isinstance(url, str) \
+                    and url.startswith(prefixes) and ref not in refs:
+                refs.append(ref)
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for value in node:
+                walk(value)
+
+    walk(tree)
+    return refs
+
+
+def _reload(cmux_bin: str, ref: str) -> bool:
+    try:
+        return subprocess.run([cmux_bin, "browser", ref, "reload"], capture_output=True, timeout=10).returncode == 0
+    except (OSError, subprocess.SubprocessError):
+        return False
+
+
+def reload_waiting_pages(service: SidebarService, cmux_bin: str, port: int,
+                         delays: Sequence[float] = PAGE_CHECK_DELAYS,
+                         sleep: Callable[[float], None] = time.sleep) -> None:
+    """Reloads this server's pages in cmux until one of them asks for the view.
+
+    A page that is already running reconnects by itself and asks within the first delay.
+    """
+    for delay in delays:
+        sleep(delay)
+        if service.page_seen():
+            return
+        if [ref for ref in page_surfaces(cmux_bin, port) if _reload(cmux_bin, ref)]:
+            log("Reloaded the Linear page, which had opened before the server.")
+
+
 def main(port: Optional[int] = None, refresh_seconds: Optional[int] = None) -> int:
     try:
         settings = config.load(port, refresh_seconds)
@@ -165,6 +218,8 @@ def main(port: Optional[int] = None, refresh_seconds: Optional[int] = None) -> i
         sys.stdout.write("\033]0;Linear server\007")
     log(f"Linear sidebar on http://{settings.host}:{settings.port}/")
     threading.Thread(target=service.run_forever, name="poller", daemon=True).start()
+    threading.Thread(target=reload_waiting_pages, args=(service, settings.cmux_bin, settings.port),
+                     name="page-reload", daemon=True).start()
     try:
         server.serve_forever()
     except KeyboardInterrupt:

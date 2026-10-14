@@ -29,7 +29,7 @@ polls it; it never talks to Linear or cmux itself.
 | `linear_sidebar/linear.py` | Linear GraphQL client and the queries |
 | `linear_sidebar/view.py` | Pure functions that turn Linear data into the JSON the page renders |
 | `linear_sidebar/service.py` | The poller: when to ask cmux and Linear, caching, error handling |
-| `linear_sidebar/server.py` | HTTP server: static files, `/api/state`, `/api/open`, `/api/refresh` |
+| `linear_sidebar/server.py` | HTTP server: static files, `/api/state`, `/api/open`, `/api/refresh`; reloads a page that opened before it |
 | `web/` | The page: plain HTML, CSS and JavaScript, no build step |
 | `install.sh`, `uninstall.sh` | User-facing setup and removal |
 | `scripts/dock-setup.sh` | Creates or repairs the two Dock tabs; safe to run again; `--restart` restarts the server |
@@ -197,8 +197,12 @@ cmux changes.
 - **Closing a Dock terminal** with `close-surface` fails while a program runs
   in it, so `uninstall.sh` stops the server first.
 - **A page opened before the server listens** shows the browser's own error
-  page, which never retries; `dock-setup.sh` reloads the page once the server
-  answers. After that, `web/app.js` reconnects on its own.
+  page, which never retries; `cmux tree` still reports the page's URL. The
+  server therefore checks 2, 5, 10 and 20 seconds after it starts whether a
+  page has asked for `/api/state`, and until one has, reloads every cmux
+  browser tab showing its URL (`cmux browser <surface> reload`).
+  `dock-setup.sh` also reloads the page once the server answers. After that,
+  `web/app.js` reconnects on its own.
 - **Restart after a cmux relaunch.** cmux restores the Dock layout but not
   processes. A resume command set from the CLI (`cmux surface resume set`) is
   kept for manual restore only; it runs automatically after the user approves
@@ -207,6 +211,13 @@ cmux changes.
   than the defaults into the command as `--port` and `--refresh-seconds`, and
   leaves an unchanged binding alone so that it keeps its approval. The API key
   never goes into the command.
+- **Restore fails in a Dock terminal (cmux 0.65.1).** To restore, cmux types
+  `cmux restore --surface` without an id, and that command looks up the
+  terminal it runs in. A global Dock terminal gets the window's id as
+  `CMUX_WORKSPACE_ID`, the lookup finds nothing (`cmux identify` reports
+  `caller: null`), and restore fails with "the current cmux surface could not
+  be identified". `cmux restore --surface "$CMUX_SURFACE_ID"` works. The README
+  offers a shell function that adds the id.
 - **A chromeless page** (no browser toolbar) is possible only for a browser
   control seeded from `~/.config/cmux/dock.json` with `"chrome": false`; the
   CLI cannot create one.
@@ -232,7 +243,7 @@ python3 -m unittest discover -s tests -t .
 | `tests/test_view.py` | Turning Linear data into the view: groups, the backlog, counts, sorting, the card, project choice, colours |
 | `tests/test_service.py` | The poller with a fake cmux and a fake Linear: caching, issues shared within a project, refresh, errors, renames |
 | `tests/test_linear.py` | The GraphQL client against canned HTTP answers, including broken ones |
-| `tests/test_server.py` | The HTTP server on a random port: host and origin checks, `/api/open` validation |
+| `tests/test_server.py` | The HTTP server on a random port: host and origin checks, `/api/open` validation; finding and reloading its pages |
 | `tests/test_workspace.py` | git in temporary folders and a fake `cmux` executable |
 | `tests/test_config.py` | Settings, and the Keychain's answers: a key, no key, locked, no answer |
 | `tests/test_cli.py` | Command line options |

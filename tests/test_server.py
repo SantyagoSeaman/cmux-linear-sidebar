@@ -2,6 +2,7 @@ import http.client
 import json
 import subprocess
 import threading
+import types
 import unittest
 from http.server import ThreadingHTTPServer
 from unittest import mock
@@ -123,6 +124,87 @@ class ServerTest(unittest.TestCase):
         self.assertEqual(self.post("/api/open", [1, 2])[0], 400)
         self.assertEqual(self.post("/api/open", b"{}", **{"Content-Length": "lots"})[0], 400)
         self.assertEqual(self.post("/api/unknown", {})[0], 404)
+
+
+def ran(stdout="", returncode=0):
+    return subprocess.CompletedProcess([], returncode, stdout=stdout, stderr="")
+
+
+TREE = {"windows": [{"ref": "window:1", "workspaces": [{"panes": [
+    {"ref": "pane:1", "surfaces": [
+        {"ref": "surface:1", "type": "browser", "url": "http://127.0.0.1:47801/"},
+        {"ref": "surface:2", "type": "terminal", "url": None},
+        {"ref": "surface:3", "type": "browser", "url": "http://127.0.0.1:478012/"},
+        {"ref": "surface:4", "type": "browser", "url": "https://linear.app/acme"},
+    ]},
+    {"ref": "pane:2", "dock_scope": "global", "surfaces": [
+        {"ref": "surface:5", "type": "browser", "url": "http://localhost:47801/?x=1"},
+        {"ref": "surface:1", "type": "browser", "url": "http://127.0.0.1:47801/"},
+    ]},
+]}]}]}
+
+
+class PageSurfacesTest(unittest.TestCase):
+    def setUp(self):
+        self.run = mock.patch.object(server_module.subprocess, "run").start()
+        self.addCleanup(mock.patch.stopall)
+
+    def test_browser_tabs_showing_this_servers_page(self):
+        self.run.return_value = ran(json.dumps(TREE))
+        self.assertEqual(server_module.page_surfaces("cmux", 47801), ["surface:1", "surface:5"])
+        self.assertEqual(self.run.call_args[0][0], ["cmux", "tree", "--all", "--json"])
+
+    def test_nothing_when_cmux_does_not_answer(self):
+        for outcome in (ran("", 1), ran("not json"), OSError("no cmux"), subprocess.TimeoutExpired("cmux", 10)):
+            with self.subTest(outcome=outcome):
+                self.run.side_effect = outcome if isinstance(outcome, Exception) else None
+                self.run.return_value = outcome
+                self.assertEqual(server_module.page_surfaces("cmux", 47801), [])
+
+
+class ReloadWaitingPagesTest(unittest.TestCase):
+    def setUp(self):
+        self.seen_after = None
+        self.checks = 0
+        self.reloaded = []
+        self.run = mock.patch.object(server_module.subprocess, "run", side_effect=self.cmux).start()
+        self.log = mock.patch.object(server_module, "log").start()
+        self.addCleanup(mock.patch.stopall)
+
+    def cmux(self, args, **kwargs):
+        if args[1] == "tree":
+            return ran(json.dumps(TREE))
+        self.reloaded.append(args[2])
+        return ran()
+
+    def page_seen(self):
+        self.checks += 1
+        return self.seen_after is not None and self.checks > self.seen_after
+
+    def reload(self):
+        service = types.SimpleNamespace(page_seen=self.page_seen)
+        server_module.reload_waiting_pages(service, "cmux", 47801, delays=(2, 3, 5), sleep=lambda seconds: None)
+
+    def test_a_running_page_is_left_alone(self):
+        self.seen_after = 0
+        self.reload()
+        self.assertEqual(self.reloaded, [])
+        self.log.assert_not_called()
+
+    def test_pages_are_reloaded_until_one_asks(self):
+        self.seen_after = 1
+        self.reload()
+        self.assertEqual(self.reloaded, ["surface:1", "surface:5"])
+        self.log.assert_called_once()
+
+    def test_gives_up_after_the_last_delay(self):
+        self.reload()
+        self.assertEqual(self.reloaded, ["surface:1", "surface:5"] * 3)
+
+    def test_a_failed_reload_is_not_logged(self):
+        self.run.side_effect = lambda args, **kwargs: ran(json.dumps(TREE)) if args[1] == "tree" else ran("", 1)
+        self.reload()
+        self.log.assert_not_called()
 
 
 if __name__ == "__main__":

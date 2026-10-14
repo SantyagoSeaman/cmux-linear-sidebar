@@ -97,6 +97,33 @@ key from your Keychain.
 run `~/.cmux-linear-sidebar/scripts/dock-setup.sh`. If this happens after every
 cmux restart, repeat the one-time Auto-Restore step from [Install](#install).
 
+**After a cmux restart the Linear server tab shows "the current cmux surface
+could not be identified".** This is a bug in cmux 0.65.1, not in your setup:
+cmux tries to restart the server by typing `cmux restore --surface` into the
+tab, but for a Dock tab that command cannot tell which tab it runs in. Your
+Auto-Restore setting is fine. To start the server, run
+`~/.cmux-linear-sidebar/scripts/dock-setup.sh` in a cmux terminal, or type
+`cmux restore --surface "$CMUX_SURFACE_ID"` in the Linear server tab. The
+server reloads the Linear tab once it is up.
+
+To have it start by itself again until cmux fixes this, add this workaround to
+your shell's startup file (`~/.bash_profile` for bash, `~/.zshrc` for zsh). It
+changes only that one command, adding the id of the tab it runs in; every other
+`cmux` command runs unchanged:
+
+```sh
+# cmux 0.65.1 cannot restore a Dock terminal on its own: pass the tab's id.
+cmux() {
+  if [ "$#" -eq 2 ] && [ "$1" = restore ] && [ "$2" = --surface ] && [ -n "${CMUX_SURFACE_ID:-}" ]; then
+    command cmux restore --surface "$CMUX_SURFACE_ID"
+  else
+    command cmux "$@"
+  fi
+}
+```
+
+Remove it once a cmux update restores the server without it.
+
 **The Linear tab is gone.** Run `~/.cmux-linear-sidebar/install.sh` again: it
 keeps your key and only reopens what is missing.
 

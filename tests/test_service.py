@@ -264,6 +264,12 @@ class SidebarServiceTest(unittest.TestCase):
         service.tick()
         self.assertEqual(service.current()["status"], "no-key")
 
+    def test_page_seen_after_the_first_request(self):
+        service = SidebarService(SETTINGS, None, workspace_source=lambda cmux: workspace())
+        self.assertFalse(service.page_seen())
+        service.current()
+        self.assertTrue(service.page_seen())
+
     def test_an_unexpected_error_does_not_stop_the_poller(self):
         harness = self.harness()
         harness.tick()
